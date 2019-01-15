@@ -39,7 +39,7 @@ class LineSeries : BaseSeries<Quote> {
 
     override fun getScreenData(chart: Chart): MutableList<out Quote> {
         val series = lineSeries.subList(chart.getStartScreenPosition(), chart.getEndScreenPosition())
-        Log.d("ScreenData", "${series.size}")
+//        Log.d("ScreenData", "${series.size}")
         updateExtremes(series)
         return series
     }

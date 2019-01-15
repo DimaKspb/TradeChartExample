@@ -6,9 +6,9 @@ import android.util.Log
 import android.view.*
 import android.widget.Scroller
 
-class MyScroller(context: Context, surfaceView: SurfaceView, val chart: Chart?) : Scroller(context), ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
+class MyScroller(context: Context, private val chart: Chart?) : Scroller(context), ScaleGestureDetector.OnScaleGestureListener,
+        View.OnTouchListener {
     private var mIsStarted: Boolean = false
-    private var mOnMyScrollerListener: OnMyScrollerListener? = null
     private var scaleGestureDetector: ScaleGestureDetector? = null
     private var scrollDelta = 0f
     private var scaleDelta = 0f
@@ -45,14 +45,6 @@ class MyScroller(context: Context, surfaceView: SurfaceView, val chart: Chart?) 
         mIsStarted = true
     }
 
-    fun setOnFinishListener(onMyScrollerListener: OnMyScrollerListener) {
-        mOnMyScrollerListener = onMyScrollerListener
-    }
-
-    interface OnMyScrollerListener {
-        fun onUpdateDraw()
-    }
-
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
 //        Log.d("Scrolling", "${event?.action} x0=${event?.getX(0)} x=${event?.x}, ${event?.xPrecision}")
@@ -68,7 +60,7 @@ class MyScroller(context: Context, surfaceView: SurfaceView, val chart: Chart?) 
                         if (scrollDelta > event.x) {
 //                            Log.d("Scroll", "plus ${chart.getStartScreenPosition()}")
                             if (chart.scrolling(false)) {
-                                mOnMyScrollerListener?.onUpdateDraw()
+//                                mOnMyScrollerListener?.onUpdateDraw()
                             } else {
                                 abortAnimation()
                                 break
@@ -76,7 +68,7 @@ class MyScroller(context: Context, surfaceView: SurfaceView, val chart: Chart?) 
                         } else if (scrollDelta < event.x && chart.getStartScreenPosition() != 0) {
 //                            Log.d("Scroll", "minus ${chart.getStartScreenPosition()}")
                             if (chart.scrolling(true)) {
-                                mOnMyScrollerListener?.onUpdateDraw()
+//                                mOnMyScrollerListener?.onUpdateDraw()
                             } else {
                                 abortAnimation()
                                 break
@@ -107,7 +99,7 @@ class MyScroller(context: Context, surfaceView: SurfaceView, val chart: Chart?) 
     override fun onScale(detector: ScaleGestureDetector?): Boolean {
         if (Math.abs(scaleDelta - detector?.currentSpanX!!) > 50) {
             chart?.scale()
-            mOnMyScrollerListener?.onUpdateDraw()
+//            mOnMyScrollerListener?.onUpdateDraw()
         }
         Log.d("onScaleDetector", "${Math.abs(scaleDelta - detector.currentSpanX)}")
         return true

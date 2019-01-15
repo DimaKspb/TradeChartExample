@@ -1,6 +1,7 @@
 package com.dima.tradechart
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
 import android.view.SurfaceHolder
@@ -10,34 +11,36 @@ import com.dima.tradechart.component.Chart
 import com.dima.tradechart.component.DrawThread
 import com.dima.tradechart.component.MyScroller
 import com.dima.tradechart.component.Quote
+import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
-class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer, MyScroller.OnMyScrollerListener {
+class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private var chart: Chart? = null
     private var myHolder: SurfaceHolder
+
     private var myThread: DrawThread? = null
-    private var scroller: MyScroller? = null
 
     init {
         myHolder = holder
         holder.addCallback(this)
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         Log.d("Surface", "surfaceChanged$width , $height")
-        myHolder = holder!!
-        chart = Chart(height, width, context as MainActivity)
-        scroller = MyScroller(context, this, chart)
-        scroller?.setOnFinishListener(this)
-        setOnTouchListener(scroller)
+        myHolder = holder
+        chart = Chart(height, width)
 
-        myThread = DrawThread(myHolder, chart!!)
-        myThread?.initDraw()
+        chart?.let {
+            setOnTouchListener(MyScroller(context, it))
+            myThread = DrawThread(myHolder, it)
+
+            myThread?.initDraw()
+        }
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -48,15 +51,16 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer, MyScroller.
         Log.d("Surface", "surfaceCreated")
     }
 
-    override fun onUpdateDraw() {
-        myThread?.updateDraw()
-    }
-
-    fun initRandomData() {
+    suspend fun initRandomData() {
         for (i in 0..10) {
-            Thread.sleep(1500)
-            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.52100, 1.52400), 0.0, Calendar.getInstance().timeInMillis))
-            myThread?.updateDraw()
+            delay(500)
+            chart?.updateLastQuote(
+                Quote(
+                    ThreadLocalRandom.current().nextDouble(1.52100, 1.52400),
+                    0.0,
+                    Calendar.getInstance().timeInMillis
+                )
+            )
         }
     }
 
