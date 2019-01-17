@@ -5,7 +5,7 @@ import android.graphics.Paint
 
 interface ChartConfig {
     val offsetRight: Float
-        get() = 20f
+        get() = 40f
     val offsetBottom: Float
         get() = 20f
 

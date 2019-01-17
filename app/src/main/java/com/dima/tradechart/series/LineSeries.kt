@@ -38,6 +38,7 @@ class LineSeries : BaseSeries<Quote> {
     private fun getLast() = lineSeries[lineSeries.size - 1]
 
     override fun getScreenData(chart: Chart): MutableList<out Quote> {
+//        Log.d("SubList", "${chart.getStartScreenPosition()} , ${chart.getEndScreenPosition()}")
         val series = lineSeries.subList(chart.getStartScreenPosition(), chart.getEndScreenPosition())
 //        Log.d("ScreenData", "${series.size}")
         updateExtremes(series)
@@ -45,8 +46,8 @@ class LineSeries : BaseSeries<Quote> {
     }
 
     private fun updateExtremes(series: MutableList<Quote>) {
-        maxY = series.maxBy { it -> it.bid }?.bid!!
-        minY = series.minBy { it -> it.bid }?.bid!!
+        maxY = series.maxBy { it -> it.bid }?.bid ?: 0.0
+        minY = series.minBy { it -> it.bid }?.bid ?: 0.0
     }
 
     override fun getData(): ArrayList<Quote> {

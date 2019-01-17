@@ -9,7 +9,6 @@ import com.dima.tradechart.component.BasesQuote
 import com.dima.tradechart.component.Chart
 
 class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>>() {
-    private val paddingForGrid = 50f
 
     private val myPaintLine = Paint().apply {
         color = Color.RED
@@ -19,8 +18,13 @@ class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>
 
     override fun draw(canvas: Canvas?, series: BaseSeries<BasesQuote>?) {
         //horizontal
-        canvas?.drawLine(0f, paddingForGrid, chart.width.toFloat() - paddingForGrid, paddingForGrid, myPaintLine)
+        canvas?.drawLine(0f, chart.offsetRight, chart.width.toFloat() - chart.offsetRight, chart.offsetRight, myPaintLine)
         //vertical
-        canvas?.drawLine(chart.width.toFloat() - paddingForGrid, paddingForGrid, chart.width.toFloat() - paddingForGrid, chart.height.toFloat(), myPaintLine)
+        canvas?.drawLine(
+                chart.width.toFloat() - chart.offsetRight,
+                chart.offsetRight,
+                chart.width.toFloat() - chart.offsetRight,
+                chart.height.toFloat(), myPaintLine
+        )
     }
 }

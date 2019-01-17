@@ -1,5 +1,6 @@
 package com.dima.tradechart
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -14,15 +15,19 @@ import com.dima.tradechart.component.Quote
 import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
+import android.text.method.Touch.onTouchEvent
+import android.view.GestureDetector
+import android.view.MotionEvent
 
-class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer {
+
+class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
     private var chart: Chart? = null
     private var myHolder: SurfaceHolder
-
+    private var scroller: MyScroller? = null
     private var myThread: DrawThread? = null
 
     init {
@@ -36,11 +41,16 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer {
         chart = Chart(height, width)
 
         chart?.let {
-            setOnTouchListener(MyScroller(context, it))
+            scroller = MyScroller(context, it)
             myThread = DrawThread(myHolder, it)
 
             myThread?.initDraw()
         }
+    }
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        scroller?.scaleGestureDetector?.onTouchEvent(event)
+        return true
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -54,17 +64,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, Observer {
     suspend fun initRandomData() {
         for (i in 0..10) {
             delay(500)
-            chart?.updateLastQuote(
-                Quote(
-                    ThreadLocalRandom.current().nextDouble(1.52100, 1.52400),
-                    0.0,
-                    Calendar.getInstance().timeInMillis
-                )
-            )
+            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.52100, 1.52400), 0.0, Calendar.getInstance().timeInMillis))
         }
-    }
-
-    override fun update(o: Observable?, arg: Any?) {
-
     }
 }
