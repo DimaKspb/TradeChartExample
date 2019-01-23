@@ -1,6 +1,11 @@
 package com.dima.tradechart.render
 
+import android.animation.Animator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.graphics.*
+import android.util.Log
+import android.view.animation.PathInterpolator
 import com.dima.tradechart.component.BaseRender
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.series.LineSeries
@@ -25,6 +30,7 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
 
         for (i in 0 until mySeries.size) {
             val pointX = chart.getSceneXValue(i)
+//            Log.d("concurency","$i , ${mySeries.size}")
             val pointY = chart.getSceneYValue(mySeries[i].bid)
 
             if (i == 0)
@@ -37,12 +43,14 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
                     p.lineTo(midX, midY)
                 else
                     p.quadTo(prevPointX, prevPointY, midX, midY)
+
             }
             prevPointX = pointX
             prevPointY = pointY
         }
 
         if (prevPointY != null && prevPointX != null) {
+            Log.d("is","last")
             p.lineTo(prevPointX, prevPointY)
         }
 

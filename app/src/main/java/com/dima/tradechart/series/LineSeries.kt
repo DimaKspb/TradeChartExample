@@ -5,16 +5,21 @@ import com.dima.tradechart.component.BaseSeries
 import com.dima.tradechart.component.Candle
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.component.Quote
+import java.util.*
 import kotlin.collections.ArrayList
 
 class LineSeries : BaseSeries<Quote> {
-    var lineSeries = ArrayList<Quote>()
+    var lineSeries = Collections.synchronizedList(ArrayList<Quote>())
+    val visibleScreenData = Collections.synchronizedList(mutableListOf<Quote>())
 
     var minY = 0.0
     var maxY = 0.0
 
     override fun addHistory(array: ArrayList<Candle>) {
         lineSeries = array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>
+
+        maxY = lineSeries.maxBy { it -> it.bid }?.bid ?: 0.0
+        minY = lineSeries.minBy { it -> it.bid }?.bid ?: 0.0
     }
 
     override fun addLastQuote(quote: Quote, frame: Double) {
@@ -33,16 +38,18 @@ class LineSeries : BaseSeries<Quote> {
             Log.d("Series", "add ${quote.time} , ${getLast().time}")
             lineSeries.add(quote)
         }
+
     }
 
     private fun getLast() = lineSeries[lineSeries.size - 1]
 
-    override fun getScreenData(chart: Chart): MutableList<out Quote> {
-//        Log.d("SubList", "${chart.getStartScreenPosition()} , ${chart.getEndScreenPosition()}")
-        val series = lineSeries.subList(chart.getStartScreenPosition(), chart.getEndScreenPosition())
+    override fun getScreenData(chart: Chart): MutableList<Quote> {
+        visibleScreenData.clear()
+        visibleScreenData.addAll(lineSeries.subList(chart.getStartScreenPosition(), chart.getEndScreenPosition()))
 //        Log.d("ScreenData", "${series.size}")
-        updateExtremes(series)
-        return series
+        updateExtremes(visibleScreenData)
+
+        return visibleScreenData
     }
 
     private fun updateExtremes(series: MutableList<Quote>) {
@@ -51,7 +58,7 @@ class LineSeries : BaseSeries<Quote> {
     }
 
     override fun getData(): ArrayList<Quote> {
-        return lineSeries
+        return lineSeries as ArrayList<Quote>
     }
 
     override fun toString(): String {

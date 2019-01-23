@@ -62,9 +62,9 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     suspend fun initRandomData() {
-        for (i in 0..10) {
-            delay(500)
-            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.52100, 1.52400), 0.0, Calendar.getInstance().timeInMillis))
+        while(true) {
+            delay(1500)
+            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15100, 1.15120), 0.0, Calendar.getInstance().timeInMillis))
         }
     }
 }

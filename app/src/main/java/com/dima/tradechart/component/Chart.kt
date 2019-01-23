@@ -7,6 +7,7 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
     private val typeChart = TypeChart.LINE
     var isAlreadyInit = false
     var myLineSeries = LineSeries()
+    var isEndChartVisible = true
 
     var frame = 1
     var pointOnChart = 40
@@ -25,14 +26,18 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
     private val renderWidth = width - offsetRight
 
     fun getSceneXValue(position: Int): Float = (position) * renderWidth / pointOnChart
+
+    @Synchronized
     fun getSceneYValue(bid: Double): Float = ((bid - getMinY()) * renderHeight / (getMaxY() - getMinY())).toFloat()
 
     fun getMinY() = myLineSeries.minY - dY
     fun getMaxY() = myLineSeries.maxY + dY
 
     fun updateLastQuote(lineSeries: Quote) {
-        screenStartPosition++
+        Log.d("updateLastQuote", "$screenStartPosition")
         myLineSeries.addLastQuote(lineSeries, frame.toDouble())
+        if (isEndChartVisible)
+            screenStartPosition++
     }
 
     @Synchronized
@@ -65,8 +70,14 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
     fun getEndScreenPosition(): Int {
         return when {
             screenStartPosition == 0 -> screenStartPosition + pointOnChart
-            screenStartPosition + pointOnChart >= myLineSeries.lineSeries.size -> myLineSeries.lineSeries.size
-            else -> screenStartPosition + pointOnChart + 1
+            screenStartPosition + pointOnChart >= myLineSeries.lineSeries.size -> {
+                isEndChartVisible = true
+                myLineSeries.lineSeries.size
+            }
+            else -> {
+                isEndChartVisible = false
+                screenStartPosition + pointOnChart + 1
+            }
         }
     }
 
