@@ -13,18 +13,13 @@ class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>
     private val myPaintLine = Paint().apply {
         color = Color.RED
         style = Paint.Style.STROKE
-        strokeWidth = 1f
+        strokeWidth = 2f
     }
 
     override fun draw(canvas: Canvas?, series: BaseSeries<BasesQuote>?) {
         //horizontal
         canvas?.drawLine(0f, chart.offsetRight, chart.width.toFloat() - chart.offsetRight, chart.offsetRight, myPaintLine)
         //vertical
-        canvas?.drawLine(
-                chart.width.toFloat() - chart.offsetRight,
-                chart.offsetRight,
-                chart.width.toFloat() - chart.offsetRight,
-                chart.height.toFloat(), myPaintLine
-        )
+        canvas?.drawLine(chart.width.toFloat() - chart.offsetRight, chart.offsetRight, chart.width.toFloat() - chart.offsetRight, chart.height.toFloat(), myPaintLine)
     }
 }

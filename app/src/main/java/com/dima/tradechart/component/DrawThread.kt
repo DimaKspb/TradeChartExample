@@ -6,6 +6,7 @@ import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.SurfaceHolder
 import android.util.Log
+import com.dima.tradechart.render.GridRender
 import com.dima.tradechart.render.LineRender
 import com.dima.tradechart.render.XYAxisRender
 import kotlinx.coroutines.Dispatchers
@@ -19,6 +20,7 @@ class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Ch
 
     private var axisXYRender = XYAxisRender(chart)
     private var lineRender = LineRender(chart)
+    private var gridRender = GridRender(chart)
 
     init {
         Log.d("myThread", "init")
@@ -40,6 +42,7 @@ class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Ch
 
                         axisXYRender.draw(this)
                         lineRender.draw(this, chart.myLineSeries)
+                        gridRender.draw(this, chart.myLineSeries)
 
                         surfaceHolder.unlockCanvasAndPost(this)
                     }

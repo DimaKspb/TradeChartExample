@@ -5,9 +5,9 @@ import android.graphics.Paint
 
 interface ChartConfig {
     val offsetRight: Float
-        get() = 40f
+        get() = 60f
     val offsetBottom: Float
-        get() = 20f
+        get() = 60f
 
     val paintLine: Paint
         get() = Paint().apply {
