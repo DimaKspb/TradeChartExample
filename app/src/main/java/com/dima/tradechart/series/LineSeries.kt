@@ -24,18 +24,18 @@ class LineSeries : BaseSeries<Quote> {
 
     override fun addLastQuote(quote: Quote, frame: Double) {
         if (getLast().time > quote.time) return
-        Log.d("SeriesS1", getLast().time.toString() + "," + getLast().bid)
+//        Log.d("SeriesS1", getLast().time.toString() + "," + getLast().bid)
         if (getLast().time + (frame * 1000) > quote.time) {
 //            quote.time = getLast().time + frame + 10
-            Log.d("SeriesS3", quote.time.toLong().toString())
+//            Log.d("SeriesS3", quote.time.toLong().toString())
         }
         if (getLast().bid == quote.bid) return
 //
         if (quote.time - getLast().time <= frame) {
-            Log.d("Series", "change ${quote.time} , ${getLast().time}")
+//            Log.d("Series", "change ${quote.time} , ${getLast().time}")
             lineSeries[lineSeries.size - 1].bid = quote.bid
         } else {
-            Log.d("Series", "add ${quote.time} , ${getLast().time}")
+//            Log.d("Series", "add ${quote.time} , ${getLast().time}")
             lineSeries.add(quote)
         }
 

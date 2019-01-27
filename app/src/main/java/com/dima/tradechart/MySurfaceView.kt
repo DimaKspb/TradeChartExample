@@ -1,13 +1,11 @@
 package com.dima.tradechart
 
-import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import com.dima.tradechart.MainActivity
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.component.DrawThread
 import com.dima.tradechart.component.MyScroller
@@ -15,9 +13,6 @@ import com.dima.tradechart.component.Quote
 import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import android.text.method.Touch.onTouchEvent
-import android.view.GestureDetector
-import android.view.MotionEvent
 
 
 class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
@@ -49,7 +44,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        scroller?.scaleGestureDetector?.onTouchEvent(event)
+        scroller?.onTouch(this, event)
         return true
     }
 
@@ -62,7 +57,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     }
 
     suspend fun initRandomData() {
-        while(true) {
+        while (true) {
             delay(1500)
             chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15100, 1.15120), 0.0, Calendar.getInstance().timeInMillis))
         }

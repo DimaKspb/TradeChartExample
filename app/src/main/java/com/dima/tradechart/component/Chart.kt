@@ -34,7 +34,7 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
     fun getMaxY() = myLineSeries.maxY + dY
 
     fun updateLastQuote(lineSeries: Quote) {
-        Log.d("updateLastQuote", "$screenStartPosition")
+//        Log.d("updateLastQuote", "$screenStartPosition")
         myLineSeries.addLastQuote(lineSeries, frame.toDouble())
         if (isEndChartVisible)
             screenStartPosition++
@@ -52,13 +52,20 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
         return true
     }
 
-//    fun scale() {
-//        Log.d("ChartScale", "${screenStartPosition - scaleFactor}")
-//        if ((screenStartPosition - scaleFactor) < 0) return
-//
-//        scaleFactor += frame
-//        Log.d("Scale", "$scaleFactor")
-//    }
+    fun scale(isZoomOut: Boolean) {
+        Log.d("ChartScale", "$screenStartPosition ,$pointOnChart, ${myLineSeries.lineSeries.size}")
+        if (screenStartPosition == 1) return
+        if (pointOnChart == myLineSeries.lineSeries.size - 1 && isZoomOut) return
+        if (pointOnChart <= 20 && !isZoomOut) return
+        if (pointOnChart >= 160) return
+
+        if (isZoomOut)
+            pointOnChart += 10
+        else
+            pointOnChart -= 10
+
+        Log.d("Scale", "$scaleFactor")
+    }
 
     fun getStartScreenPosition(): Int {
         return if (screenStartPosition < 0) {
@@ -69,10 +76,10 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
 
     fun getEndScreenPosition(): Int {
         return when {
-            screenStartPosition == 0 -> screenStartPosition + pointOnChart
+            screenStartPosition == 0 && pointOnChart <= myLineSeries.lineSeries.size  -> screenStartPosition + pointOnChart
             screenStartPosition + pointOnChart >= myLineSeries.lineSeries.size -> {
                 isEndChartVisible = true
-                myLineSeries.lineSeries.size
+                myLineSeries.lineSeries.size - 1
             }
             else -> {
                 isEndChartVisible = false

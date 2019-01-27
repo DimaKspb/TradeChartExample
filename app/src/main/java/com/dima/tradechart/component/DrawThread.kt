@@ -24,16 +24,15 @@ class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Ch
         Log.d("myThread", "init")
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     fun initDraw() {
         try {
             GlobalScope.launch(Dispatchers.Default) {
                 isDrawing = true
                 chart.isAlreadyInit = true
-                Log.d("DrawThread", "size series:${chart.myLineSeries.lineSeries.size}")
+//                Log.d("DrawThread", "size series:${chart.myLineSeries.lineSeries.size}")
                 while (isDrawing) {
 //                    delay(1000)
-                    val canvas = surfaceHolder.lockHardwareCanvas()
+                    val canvas = surfaceHolder.lockCanvas()
                     canvas?.apply {
                         drawColor(Color.WHITE)
                         translate(0f, chart.height.toFloat())

@@ -50,7 +50,6 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
         }
 
         if (prevPointY != null && prevPointX != null) {
-            Log.d("is","last")
             p.lineTo(prevPointX, prevPointY)
         }
 

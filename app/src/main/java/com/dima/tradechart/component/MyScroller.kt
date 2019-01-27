@@ -2,96 +2,98 @@ package com.dima.tradechart.component
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.GestureDetectorCompat
 import android.util.Log
-import android.view.*
-import android.widget.Scroller
+import android.view.GestureDetector
+import android.view.MotionEvent
+import android.view.ScaleGestureDetector
+import android.view.View
 
-class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.SimpleOnGestureListener(), View.OnTouchListener {
+
+class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
+    override fun onShowPress(e: MotionEvent?) {
+
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        return true
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return true
+    }
+
+    override fun onLongPress(e: MotionEvent?) {
+    }
+
     var lastX: Float = 0f
+    var isScale = false
+
+    private var gestureScale: ScaleGestureDetector? = null
+    var gestureDetector: GestureDetector? = null
+
+    private var mIsStarted: Boolean = false
+    private var scrollDelta = 0f
+    private var scaleDelta = 0f
+
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
-        Log.d("MyScroller", "onFling $velocityX")
+//        Log.d("MyScroller", "onFling ${e1?.action} ${e2?.action}")
         return true
     }
 
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
-        Log.d("MyScroller", "$distanceX , ${e1?.x} , ${e2?.x}")
-        if (e2!!.x < lastX) {
-            chart?.scrolling(false)
-        } else {
-            chart?.scrolling(true)
-        }
+        e2 ?: return true
+        if (isScale) return true
+
+        chart?.scrolling(e2.x >= lastX)
         lastX = e2.x
+
         return true
     }
 
-    private var mIsStarted: Boolean = false
-    var scaleGestureDetector: GestureDetectorCompat? = null
-    private var scrollDelta = 0f
-    private var scaleDelta = 0f
-
     init {
-        scaleGestureDetector = GestureDetectorCompat(context, this)
+        gestureDetector = GestureDetector(context, this)
+        gestureScale = ScaleGestureDetector(context, this)
     }
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-//        Log.d("Scrolling", "${event?.action} x0=${event?.getX(0)} x=${event?.x}, ${event?.xPrecision}")
-//        when (event?.action) {
-//            MotionEvent.ACTION_DOWN -> {
-//                scrollDelta = event.x
-//            }
-//            MotionEvent.ACTION_MOVE -> {
-//                startScroll(1, 0, 100, 0)
-//                while (!isFinished) {
-//                    Log.d("MotionEvent", "")
-//                    if (Math.abs(scrollDelta - event.x) < chart?.width!! / chart.pointOnChart) {
-//                        if (scrollDelta > event.x) {
-//        Log.d("MyScroll", "touch")
-//                            if (chart.scrolling(false)) {
-////                                mOnMyScrollerListener?.onUpdateDraw()
-//                            } else {
-//                                abortAnimation()
-//                                break
-//                            }
-//                        } else if (scrollDelta < event.x && chart.getStartScreenPosition() != 0) {
-////                            Log.d("Scroll", "minus ${chart.getStartScreenPosition()}")
-//                            if (chart.scrolling(true)) {
-////                                mOnMyScrollerListener?.onUpdateDraw()
-//                            } else {
-//                                abortAnimation()
-//                                break
-//                            }
-//                        }
-//                    }
-//                    computeScrollOffset()
-//                }
-//                scaleGestureDetector?.onTouchEvent(event)
-//            }
-//            MotionEvent.ACTION_UP -> {
-//
-//            }
-//        }
+        gestureScale?.onTouchEvent(event)
+        gestureDetector?.onTouchEvent(event)
+
         return true
     }
 
-//    override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
-//        Log.d("onScaleBegin", "${detector?.currentSpanX}")
-//        scaleDelta = detector?.currentSpanX!!
-//        return true
-//    }
-//
-//    override fun onScaleEnd(detector: ScaleGestureDetector?) {
-//        Log.d("onScaleEnd", "${detector?.currentSpanX}")
-//    }
-//
-//    override fun onScale(detector: ScaleGestureDetector?): Boolean {
-//        if (Math.abs(scaleDelta - detector?.currentSpanX!!) > 50) {
-//            chart?.scale()
-////            mOnMyScrollerListener?.onUpdateDraw()
-//        }
-//        Log.d("onScaleDetector", "${Math.abs(scaleDelta - detector.currentSpanX)}")
-//        return true
-//    }
+    override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
+        Log.d("MyScrollerStart", "${detector?.currentSpanX}")
+        isScale = true
+        scaleDelta = detector?.currentSpanX!!
+        return true
+    }
+
+    //
+    override fun onScaleEnd(detector: ScaleGestureDetector?) {
+        Log.d("MyScrollerEnd", "${detector?.currentSpanX}")
+        isScale = false
+        sclaeFacotr = 20
+        sclaeFacotr2 = -20
+    }
+
+    var sclaeFacotr = 20
+    var sclaeFacotr2 = -20
+
+    override fun onScale(detector: ScaleGestureDetector?): Boolean {
+        if (scaleDelta - detector?.currentSpanX!! > sclaeFacotr) {
+            chart?.scale(true)
+            sclaeFacotr += sclaeFacotr
+            Log.d("MyScrollerIn", "${sclaeFacotr}")
+        } else if (scaleDelta - detector.currentSpanX < sclaeFacotr2) {
+            chart?.scale(false)
+            sclaeFacotr2 += sclaeFacotr2
+            Log.d("MyScrollerIn", "${sclaeFacotr2}")
+        }
+
+        return true
+    }
 }
+
