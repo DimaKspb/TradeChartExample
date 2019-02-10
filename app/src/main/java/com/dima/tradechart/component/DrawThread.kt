@@ -9,37 +9,32 @@ import android.util.Log
 import com.dima.tradechart.render.GridRender
 import com.dima.tradechart.render.LineRender
 import com.dima.tradechart.render.XYAxisRender
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.lang.Exception
 
 
 class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Chart) {
     var isDrawing = false
 
-    private var axisXYRender = XYAxisRender(chart)
-    private var lineRender = LineRender(chart)
-    private var gridRender = GridRender(chart)
+    private val axisXYRender = XYAxisRender(chart)
+    private val lineRender = LineRender(chart)
+    private val gridRender: GridRender by lazy { GridRender(chart) }
+    private var job: Job? = null
 
-    init {
-        Log.d("myThread", "init")
-    }
-
-    fun initDraw() {
+    fun startDraw() {
         try {
-            GlobalScope.launch(Dispatchers.Default) {
+            job = GlobalScope.launch(Dispatchers.Default) {
                 isDrawing = true
                 chart.isAlreadyInit = true
-//                Log.d("DrawThread", "size series:${chart.myLineSeries.lineSeries.size}")
+
                 while (isDrawing) {
-//                    delay(1000)
+                    delay(10)
+
                     val canvas = surfaceHolder.lockCanvas()
                     canvas?.apply {
                         drawColor(Color.WHITE)
                         translate(0f, chart.height.toFloat())
                         canvas.scale(1f, -1f)
-
                         axisXYRender.draw(this)
                         lineRender.draw(this, chart.myLineSeries)
                         gridRender.draw(this, chart.myLineSeries)
@@ -49,10 +44,16 @@ class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Ch
                 }
             }
         } catch (exp: Exception) {
-            exp.printStackTrace()
             isDrawing = false
+            exp.printStackTrace()
         } finally {
             chart.isAlreadyInit = true
         }
+    }
+
+    fun stopDraw() {
+        isDrawing = false
+        chart.isAlreadyInit = false
+        job?.cancel()
     }
 }

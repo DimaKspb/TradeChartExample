@@ -30,7 +30,6 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
 
         for (i in 0 until mySeries.size) {
             val pointX = chart.getSceneXValue(i)
-//            Log.d("concurency","$i , ${mySeries.size}")
             val pointY = chart.getSceneYValue(mySeries[i].bid)
 
             if (i == 0)

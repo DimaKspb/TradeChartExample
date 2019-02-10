@@ -45,7 +45,7 @@ class LineSeries : BaseSeries<Quote> {
 
     override fun getScreenData(chart: Chart): MutableList<Quote> {
         visibleScreenData.clear()
-        visibleScreenData.addAll(lineSeries.subList(chart.getStartScreenPosition(), chart.getEndScreenPosition()))
+        visibleScreenData.addAll(lineSeries.subList(chart.screenStartPosition, chart.getEndScreenPosition()))
 //        Log.d("ScreenData", "${series.size}")
         updateExtremes(visibleScreenData)
 

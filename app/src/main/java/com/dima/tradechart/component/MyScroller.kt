@@ -9,22 +9,8 @@ import android.view.ScaleGestureDetector
 import android.view.View
 
 
-class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.OnGestureListener, ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
-    override fun onShowPress(e: MotionEvent?) {
-
-    }
-
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
-        return true
-    }
-
-    override fun onDown(e: MotionEvent?): Boolean {
-        return true
-    }
-
-    override fun onLongPress(e: MotionEvent?) {
-    }
-
+class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.OnGestureListener,
+    ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
     var lastX: Float = 0f
     var isScale = false
 
@@ -94,6 +80,21 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
         }
 
         return true
+    }
+
+    override fun onShowPress(e: MotionEvent?) {
+
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        return true
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return true
+    }
+
+    override fun onLongPress(e: MotionEvent?) {
     }
 }
 

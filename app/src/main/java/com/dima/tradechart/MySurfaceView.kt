@@ -39,7 +39,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
             scroller = MyScroller(context, it)
             myThread = DrawThread(myHolder, it)
 
-            myThread?.initDraw()
+            myThread?.startDraw()
         }
     }
 
@@ -50,6 +50,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         Log.d("Surface", "surfaceDestroyed")
+        myThread?.stopDraw()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
@@ -60,6 +61,14 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         while (true) {
             delay(1500)
             chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15100, 1.15120), 0.0, Calendar.getInstance().timeInMillis))
+        }
+    }
+
+    fun move(i: Int) {
+        if (i > 0) {
+            chart?.scrolling(false)
+        } else {
+            chart?.scrolling(true)
         }
     }
 }

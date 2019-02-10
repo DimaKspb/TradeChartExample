@@ -15,12 +15,10 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         buttun1.setOnClickListener {
             GlobalScope.launch(Dispatchers.Default) {
-                surface?.initRandomData()
+                svChart?.initRandomData()
             }
         }
-//        for (i in 0..10) {
-//            Thread.sleep(1000)
-//            Log.d("Thread", "runing")
-//        }
+        btnLeft.setOnClickListener { svChart.move(1) }
+        btnRight.setOnClickListener { svChart.move(-1) }
     }
 }
