@@ -5,16 +5,7 @@ import android.graphics.Paint
 
 interface ChartConfig {
     val offsetRight: Float
-        get() = 60f
+        get() = 80f
     val offsetBottom: Float
         get() = 60f
-
-    val paintLine: Paint
-        get() = Paint().apply {
-            color = Color.BLUE
-            style = Paint.Style.STROKE
-            isAntiAlias = false
-            strokeWidth = 2f
-        }
-
 }

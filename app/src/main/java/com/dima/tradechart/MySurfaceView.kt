@@ -1,18 +1,20 @@
 package com.dima.tradechart
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import com.dima.tradechart.component.Chart
-import com.dima.tradechart.component.DrawThread
-import com.dima.tradechart.component.MyScroller
-import com.dima.tradechart.component.Quote
+import com.dima.tradechart.component.*
+import com.dima.tradechart.render.GridRender
+import com.dima.tradechart.render.LineRender
+import com.dima.tradechart.render.XYAxisRender
 import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
+import kotlin.collections.ArrayList
 
 
 class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
@@ -20,8 +22,9 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    private var chart: Chart? = null
     private var myHolder: SurfaceHolder
+    private var chart: Chart? = null
+
     private var scroller: MyScroller? = null
     private var myThread: DrawThread? = null
 
@@ -35,14 +38,15 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         myHolder = holder
         chart = Chart(height, width)
 
-        chart?.let {
-            scroller = MyScroller(context, it)
-            myThread = DrawThread(myHolder, it)
+        chart?.apply {
+            scroller = MyScroller(context, this)
+            myThread = DrawThread(myHolder, this)
 
             myThread?.startDraw()
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
         scroller?.onTouch(this, event)
         return true
@@ -60,15 +64,11 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     suspend fun initRandomData() {
         while (true) {
             delay(1500)
-            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15100, 1.15120), 0.0, Calendar.getInstance().timeInMillis))
+            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15080, 1.15100), 0.0, Calendar.getInstance().timeInMillis))
         }
     }
 
     fun move(i: Int) {
-        if (i > 0) {
-            chart?.scrolling(false)
-        } else {
-            chart?.scrolling(true)
-        }
+        chart?.scrolling(i <= 0)
     }
 }

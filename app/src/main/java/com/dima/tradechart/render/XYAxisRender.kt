@@ -18,8 +18,8 @@ class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>
 
     override fun draw(canvas: Canvas?, series: BaseSeries<BasesQuote>?) {
         //horizontal
-        canvas?.drawLine(0f, chart.offsetRight, chart.width.toFloat() - chart.offsetRight, chart.offsetRight, myPaintLine)
+        canvas?.drawLine(0f, chart.chartHeight, chart.width.toFloat() - chart.offsetRight, chart.chartHeight, myPaintLine)
         //vertical
-        canvas?.drawLine(chart.width.toFloat() - chart.offsetRight, chart.offsetRight, chart.width.toFloat() - chart.offsetRight, chart.height.toFloat(), myPaintLine)
+        canvas?.drawLine(chart.width.toFloat() - chart.offsetRight, chart.chartHeight, chart.width.toFloat() - chart.offsetRight, 0f, myPaintLine)
     }
 }

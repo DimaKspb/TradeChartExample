@@ -57,7 +57,6 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
         return true
     }
 
-    //
     override fun onScaleEnd(detector: ScaleGestureDetector?) {
         Log.d("MyScrollerEnd", "${detector?.currentSpanX}")
         isScale = false

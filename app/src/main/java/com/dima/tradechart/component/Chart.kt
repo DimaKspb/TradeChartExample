@@ -1,5 +1,9 @@
 package com.dima.tradechart.component
 
+import android.graphics.Canvas
+import com.dima.tradechart.render.GridRender
+import com.dima.tradechart.render.LineRender
+import com.dima.tradechart.render.XYAxisRender
 import com.dima.tradechart.series.LineSeries
 
 class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
@@ -12,21 +16,24 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
     var pointOnChart = 40
 
     var screenStartPosition = 0
-
-    init {
-        myLineSeries.lineSeries = data()
-        screenStartPosition = (myLineSeries.lineSeries.size - pointOnChart)
-    }
-
     private val dY = myLineSeries.maxY - myLineSeries.minY
 
     val chartHeight = height - 50f
     val chartWidth = width - offsetRight
+    private val axisXYRender = XYAxisRender(this)
+    private val lineRender = LineRender(this)
+    private val gridRender = GridRender(this)
+
+
+    init {
+        myLineSeries.lineSeries = data()
+        screenStartPosition = (myLineSeries.lineSeries.size - pointOnChart)
+        isAlreadyInit = true
+    }
 
     fun getSceneXValue(position: Int): Float = (position) * chartWidth / pointOnChart
 
-    @Synchronized
-    fun getSceneYValue(bid: Double): Float = ((bid - getMinY()) * chartHeight / (getMaxY() - getMinY())).toFloat()
+    fun getSceneYValue(bid: Double): Float = ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
 
     fun getMinY() = myLineSeries.minY - dY
     fun getMaxY() = myLineSeries.maxY + dY
@@ -74,5 +81,11 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
 
     override fun toString(): String {
         return "Chart(height=$height, width=$width, typeChart=$typeChart)"
+    }
+
+    fun drawRenders(canvas: Canvas) {
+        axisXYRender.draw(canvas)
+        lineRender.draw(canvas, myLineSeries)
+        gridRender.draw(canvas, myLineSeries)
     }
 }

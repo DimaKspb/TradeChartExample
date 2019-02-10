@@ -1,11 +1,6 @@
 package com.dima.tradechart.render
 
-import android.animation.Animator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.graphics.*
-import android.util.Log
-import android.view.animation.PathInterpolator
 import com.dima.tradechart.component.BaseRender
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.series.LineSeries
@@ -41,7 +36,7 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
                 if (i == 1)
                     p.lineTo(midX, midY)
                 else
-                    p.quadTo(prevPointX, prevPointY, midX, midY)
+                    p.quadTo(prevPointX, (chart.offsetBottom + prevPointY), midX, (chart.offsetBottom + midY))
 
             }
             prevPointX = pointX
@@ -49,7 +44,7 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
         }
 
         if (prevPointY != null && prevPointX != null) {
-            p.lineTo(prevPointX, prevPointY)
+            p.lineTo(prevPointX, (chart.offsetBottom + prevPointY))
         }
 
         canvas?.drawPath(p, paintLine)
