@@ -1,6 +1,5 @@
 package com.dima.tradechart.series
 
-import android.util.Log
 import com.dima.tradechart.component.BaseSeries
 import com.dima.tradechart.component.Candle
 import com.dima.tradechart.component.Chart
@@ -18,8 +17,8 @@ class LineSeries : BaseSeries<Quote> {
     override fun addHistory(array: ArrayList<Candle>) {
         lineSeries = array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>
 
-        maxY = lineSeries.maxBy { it -> it.bid }?.bid ?: 0.0
-        minY = lineSeries.minBy { it -> it.bid }?.bid ?: 0.0
+        maxY = lineSeries.maxBy { it.bid }?.bid ?: 0.0
+        minY = lineSeries.minBy { it.bid }?.bid ?: 0.0
     }
 
     override fun addLastQuote(quote: Quote, frame: Double) {
@@ -38,7 +37,6 @@ class LineSeries : BaseSeries<Quote> {
 //            Log.d("Series", "add ${quote.time} , ${getLast().time}")
             lineSeries.add(quote)
         }
-
     }
 
     private fun getLast() = lineSeries[lineSeries.size - 1]
@@ -46,15 +44,15 @@ class LineSeries : BaseSeries<Quote> {
     override fun getScreenData(chart: Chart): MutableList<Quote> {
         visibleScreenData.clear()
         visibleScreenData.addAll(lineSeries.subList(chart.screenStartPosition, chart.getEndScreenPosition()))
-//        Log.d("ScreenData", "${series.size}")
+
         updateExtremes(visibleScreenData)
 
         return visibleScreenData
     }
 
     private fun updateExtremes(series: MutableList<Quote>) {
-        maxY = series.maxBy { it -> it.bid }?.bid ?: 0.0
-        minY = series.minBy { it -> it.bid }?.bid ?: 0.0
+        maxY = series.maxBy { it.bid }?.bid ?: 0.0
+        minY = series.minBy { it.bid }?.bid ?: 0.0
     }
 
     override fun getData(): ArrayList<Quote> {

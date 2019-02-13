@@ -8,16 +8,13 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.dima.tradechart.component.*
-import com.dima.tradechart.render.GridRender
-import com.dima.tradechart.render.LineRender
-import com.dima.tradechart.render.XYAxisRender
 import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.collections.ArrayList
 
 
 class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
+
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -64,11 +61,17 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     suspend fun initRandomData() {
         while (true) {
             delay(1500)
-            chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15080, 1.15100), 0.0, Calendar.getInstance().timeInMillis))
+            chart?.updateLastQuote(
+                Quote(
+                    ThreadLocalRandom.current().nextDouble(1.15080, 1.15100),
+                    0.0,
+                    Calendar.getInstance().timeInMillis
+                )
+            )
         }
     }
 
     fun move(i: Int) {
-        chart?.scrolling(i <= 0)
+        chart?.scrolling(i >= 0)
     }
 }

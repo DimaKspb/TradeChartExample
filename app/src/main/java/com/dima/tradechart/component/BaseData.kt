@@ -30,7 +30,7 @@ class Candle : BasesQuote {
             this.close = (jsonArray.getDouble("open") + jsonArray.getDouble("close")) / 100000
             this.low = (jsonArray.getDouble("open") + jsonArray.getDouble("low")) / 100000
             this.height = (jsonArray.getDouble("open") + jsonArray.getDouble("high")) / 100000
-            this.time = jsonArray.getLong("ctm")
+            this.time = jsonArray.getLong("ctm") * 1000
         } catch (exp: Exception) {
             exp.printStackTrace()
         }

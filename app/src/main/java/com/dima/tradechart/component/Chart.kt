@@ -20,10 +20,10 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
 
     val chartHeight = height - 50f
     val chartWidth = width - offsetRight
+
     private val axisXYRender = XYAxisRender(this)
     private val lineRender = LineRender(this)
     private val gridRender = GridRender(this)
-
 
     init {
         myLineSeries.lineSeries = data()
