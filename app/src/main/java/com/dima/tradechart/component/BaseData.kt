@@ -1,7 +1,6 @@
 package com.dima.tradechart.component
 
 import android.graphics.Canvas
-import com.dima.tradechart.series.LineSeries
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception

@@ -1,6 +1,7 @@
 package com.dima.tradechart.component
 
 import android.graphics.Canvas
+import android.util.Log
 import com.dima.tradechart.render.GridRender
 import com.dima.tradechart.render.LineRender
 import com.dima.tradechart.render.XYAxisRender
