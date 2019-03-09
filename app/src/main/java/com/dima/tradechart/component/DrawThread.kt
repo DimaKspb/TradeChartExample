@@ -9,6 +9,7 @@ import java.lang.Exception
 class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Chart) {
     private var job: Job? = null
     private var isDrawing = false
+    private var lastTs = 0L
 
     fun startDraw() {
         try {
@@ -17,16 +18,17 @@ class DrawThread(private val surfaceHolder: SurfaceHolder, private val chart: Ch
                 chart.isAlreadyInit = true
 
                 while (isDrawing) {
-                    delay(10)
+                    val ts = System.currentTimeMillis()
+                    if (ts - lastTs > 10) {
+                        val canvas = surfaceHolder.lockCanvas()
+                        canvas?.apply {
+                            drawColor(Color.WHITE)
+                            chart.drawRenders(this)
 
-                    val canvas = surfaceHolder.lockCanvas()
-                    canvas?.apply {
-                        drawColor(Color.WHITE)
-                        chart.drawRenders(this)
-
-                        surfaceHolder.unlockCanvasAndPost(this)
+                            surfaceHolder.unlockCanvasAndPost(this)
+                            lastTs = ts
+                        }
                     }
-
                 }
             }
         } catch (exp: Exception) {

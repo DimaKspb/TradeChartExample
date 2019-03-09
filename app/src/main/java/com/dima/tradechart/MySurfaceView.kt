@@ -41,7 +41,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         chart = Chart(height, width)
 
         chart?.apply {
-            //            scroller = MyScroller(context, this)
+            scroller = MyScroller(context, this)
             myThread = DrawThread(myHolder, this)
 
             myThread?.startDraw()
@@ -56,47 +56,9 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-//        gestureDetector?.onTouchEvent(event)
+        scroller?.onTouch(this, event)
+
         val action = event.action
-
-        when (action) {
-            MotionEvent.ACTION_DOWN -> {
-                mLastY = event.x
-                counter = 0
-//                mScrollEventChecker?.forceFinished(true)
-                return true
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                val movingDelta = (event.x - mLastY).toInt()
-                mDeltaY += movingDelta
-//                Log.d("Scroll1", "$mDeltaY")
-
-                return true
-            }
-
-            MotionEvent.ACTION_UP -> {
-                mScrollEventChecker = Scroller(context)
-                mScrollEventChecker?.fling(0, 0, 60, 0, -500, 500, 0, 0)
-                android.os.Handler().post(object : Runnable {
-                    override fun run() {
-                        if (mScrollEventChecker?.isFinished == true) {
-                            Log.i("Scroller", "scroller is finished, done with fling");
-                            return;
-                        }
-                        val more = mScrollEventChecker?.computeScrollOffset()
-                        Log.d("Scroller", "${mScrollEventChecker?.currX}")
-                        chart?.scrolling(mDeltaY >= 0)
-                        if (more == true)
-                            Handler().post(this)
-                        else {
-                            mLastFlingY = 0
-                            mDeltaY = 0F
-                        }
-                    }
-                })
-            }
-        }
 
         return true
     }

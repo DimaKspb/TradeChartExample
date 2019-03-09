@@ -1,9 +1,17 @@
 package com.dima.tradechart.render
 
+import android.animation.*
 import android.graphics.*
+import android.util.Log
 import com.dima.tradechart.component.BaseRender
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.series.LineSeries
+import java.util.*
+import android.view.View.TRANSLATION_Y
+import android.view.View.TRANSLATION_X
+import android.view.View.TRANSLATION_Y
+import android.view.View.TRANSLATION_X
+
 
 class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
     private val p = Path()
@@ -35,8 +43,20 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
 
                 if (i == 1)
                     p.lineTo(midX, midY)
-                else
-                    p.quadTo(prevPointX, (chart.offsetBottom + prevPointY), midX, (chart.offsetBottom + midY))
+                else if (i == mySeries.size - 1) {
+//                    val objectAnimator1 = ValueAnimator.ofFloat(prevPointX, midX)
+//                    val objectAnimator2 = ValueAnimator.ofFloat(prevPointY, midY)
+//                    val animSet = AnimatorSet()
+//                    animSet.playTogether(objectAnimator1, objectAnimator2)
+
+//                    animSet.addListener(object : AnimatorListenerAdapter() {
+//                        override fun onAnimationStart(animation: Animator?) {
+//                            Log.d("Animate", "${animation.toString()}")
+//                        }
+//                    })
+//                    animSet.start()
+                } else
+                    p.quadTo(prevPointX, (prevPointY), midX, (midY))
 
             }
             prevPointX = pointX
@@ -44,7 +64,7 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
         }
 
         if (prevPointY != null && prevPointX != null) {
-            p.lineTo(prevPointX, (chart.offsetBottom + prevPointY))
+//            p.lineTo(prevPointX, (chart.offsetBottom + prevPointY))
         }
 
         canvas?.drawPath(p, paintLine)

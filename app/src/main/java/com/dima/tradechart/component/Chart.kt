@@ -1,7 +1,7 @@
 package com.dima.tradechart.component
 
 import android.graphics.Canvas
-import android.util.Log
+import android.widget.Scroller
 import com.dima.tradechart.render.GridRender
 import com.dima.tradechart.render.LineRender
 import com.dima.tradechart.render.XYAxisRender
@@ -34,10 +34,11 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
 
     fun getSceneXValue(position: Int): Float = (position) * chartWidth / pointOnChart
 
-    fun getSceneYValue(bid: Double): Float = ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
+    fun getSceneYValue(bid: Double): Float =
+        ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
 
-    fun getMinY() = myLineSeries.minY - dY
-    fun getMaxY() = myLineSeries.maxY + dY
+    private fun getMinY() = myLineSeries.minY - dY
+    private fun getMaxY() = myLineSeries.maxY + dY
 
     fun updateLastQuote(lineSeries: Quote) {
         myLineSeries.addLastQuote(lineSeries, frame.toDouble())
@@ -88,5 +89,17 @@ class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
         axisXYRender.draw(canvas)
         lineRender.draw(canvas, myLineSeries)
         gridRender.draw(canvas, myLineSeries)
+
+        if (itScrolling?.computeScrollOffset() == true) {
+            scrolling(isLeft)
+        }
+    }
+
+    private var itScrolling: Scroller? = null
+    var isLeft = false
+
+    fun setScroller(scrolling: Scroller?, value: Boolean = false) {
+        itScrolling = scrolling
+        isLeft = value
     }
 }
