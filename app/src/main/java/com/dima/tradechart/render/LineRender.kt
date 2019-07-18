@@ -1,19 +1,13 @@
 package com.dima.tradechart.render
 
-import android.animation.*
+import android.animation.ValueAnimator
 import android.graphics.*
-import android.util.Log
-import com.dima.tradechart.component.BaseRender
+import com.dima.tradechart.model.BaseRender
 import com.dima.tradechart.component.Chart
 import com.dima.tradechart.series.LineSeries
-import java.util.*
-import android.view.View.TRANSLATION_Y
-import android.view.View.TRANSLATION_X
-import android.view.View.TRANSLATION_Y
-import android.view.View.TRANSLATION_X
 
 
-class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
+class LineRender(private val chart: Chart) : BaseRender {
     private val p = Path()
     private val paintLine = Paint().apply {
         color = Color.BLUE
@@ -22,29 +16,32 @@ class LineRender(private val chart: Chart) : BaseRender<LineSeries>() {
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas?, series: LineSeries?) {
-        series ?: return
+    override fun draw(canvas: Canvas, series: LineSeries) {
         p.rewind()
 
-        val mySeries = series.getScreenData(chart)
-        p.moveTo(chart.getSceneXValue(0), chart.getSceneYValue(mySeries[0].bid))
+        val mySeries = series.getScreenData()
+        p.moveTo(
+                chart.getSceneXValue(mySeries[0].timeDouble),
+                chart.getSceneYValue(mySeries[0].bid)
+        )
         var prevPointX: Float? = null
         var prevPointY: Float? = null
 
         for (i in 0 until mySeries.size) {
-            val pointX = chart.getSceneXValue(i)
+            val pointX = chart.getSceneXValue(mySeries[i].timeDouble)
             val pointY = chart.getSceneYValue(mySeries[i].bid)
 
             if (i == 0)
                 p.lineTo(pointX, pointY)
-            else if (prevPointX != null && prevPointY != null) {
+            else if
+                         (prevPointX != null && prevPointY != null) {
                 val midX = (prevPointX + pointX) / 2
                 val midY = (prevPointY + pointY) / 2
 
                 if (i == 1)
                     p.lineTo(midX, midY)
                 else if (i == mySeries.size - 1) {
-//                    val objectAnimator1 = ValueAnimator.ofFloat(prevPointX, midX)
+                    val objectAnimator1 = ValueAnimator.ofFloat(prevPointX, midX)
 //                    val objectAnimator2 = ValueAnimator.ofFloat(prevPointY, midY)
 //                    val animSet = AnimatorSet()
 //                    animSet.playTogether(objectAnimator1, objectAnimator2)

@@ -10,7 +10,7 @@ import android.widget.Scroller
 import kotlinx.coroutines.*
 
 
-class MyScroller(private val context: Context, private val chart: Chart?) : GestureDetector.SimpleOnGestureListener(),
+class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.SimpleOnGestureListener(),
     ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
     private var scaleFactor = 20
     private var scaleFactor2 = -20
@@ -35,6 +35,7 @@ class MyScroller(private val context: Context, private val chart: Chart?) : Gest
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         gestureScale?.onTouchEvent(event)
         gestureDetector?.onTouchEvent(event)
+
         return true
     }
 

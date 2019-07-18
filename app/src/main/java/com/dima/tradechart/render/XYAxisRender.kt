@@ -3,12 +3,14 @@ package com.dima.tradechart.render
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.dima.tradechart.component.BaseRender
-import com.dima.tradechart.component.BaseSeries
-import com.dima.tradechart.component.BasesQuote
+import com.dima.tradechart.model.BaseRender
+import com.dima.tradechart.model.BaseSeries
+import com.dima.tradechart.model.BaseQuote
 import com.dima.tradechart.component.Chart
+import com.dima.tradechart.component.ChartConfig
+import com.dima.tradechart.series.LineSeries
 
-class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>>() {
+class XYAxisRender(private val chart: Chart) : BaseRender {
 
     private val myPaintLine = Paint().apply {
         color = Color.RED
@@ -16,10 +18,10 @@ class XYAxisRender(private val chart: Chart) : BaseRender<BaseSeries<BasesQuote>
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas?, series: BaseSeries<BasesQuote>?) {
+    override fun draw(canvas: Canvas) {
         //horizontal
-        canvas?.drawLine(0f, chart.chartHeight, chart.width.toFloat() - chart.offsetRight, chart.chartHeight, myPaintLine)
+        canvas.drawLine(0f, chart.chartHeight, chart.width.toFloat() - ChartConfig.offsetRight, chart.chartHeight, myPaintLine)
         //vertical
-        canvas?.drawLine(chart.width.toFloat() - chart.offsetRight, chart.chartHeight, chart.width.toFloat() - chart.offsetRight, 0f, myPaintLine)
+        canvas.drawLine(chart.width.toFloat() - ChartConfig.offsetRight, chart.chartHeight, chart.width.toFloat() - ChartConfig.offsetRight, 0f, myPaintLine)
     }
 }

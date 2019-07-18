@@ -6,52 +6,37 @@ import com.dima.tradechart.model.Candle
 import com.dima.tradechart.model.Quote
 import kotlin.collections.ArrayList
 
-class LineSeries : BaseSeries<Quote>() {
-
-    override val visibleScreenData = ArrayList<Quote>()
-    override val allSeries = ArrayList<Quote>()
+class CandleSeries : BaseSeries<Candle>() {
+    override val visibleScreenData = ArrayList<Candle>()
+    override val allSeries = ArrayList<Candle>()
 
     override fun addAllPoint(array: ArrayList<Candle>) {
-        allSeries.clear()
-        allSeries.addAll(array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>)
 
-        screenFinishPosition = allSeries.size
-        screenStartPosition = allSeries.size - 10
     }
 
     override fun addOnePoint(quote: Quote, frame: Double) {
-        if (getLast().time > quote.time) return
-//        Log.d("SeriesS1", getLast().time.toString() + "," + getLast().bid)
-        if (getLast().time + (frame * 1000) > quote.time) {
-//            quote.time = getLast().time + frame + 10
-//            Log.d("SeriesS3", quote.time.toLong().toString())
-        }
-        if (getLast().bid == quote.bid) return
-//
-        if (quote.time - getLast().time <= frame) {
-//            Log.d("Series", "change ${quote.time} , ${getLast().time}")
-            allSeries[allSeries.size - 1].bid = quote.bid
-        } else {
-//            Log.d("Series", "add ${quote.time} , ${getLast().time}")
-            allSeries.add(quote)
-        }
     }
 
     private fun getLast() = allSeries[allSeries.size - 1]
 
-    override fun getScreenData(): ArrayList<out Quote> {
-        synchronized(allSeries) {
-            visibleScreenData.clear()
-            visibleScreenData.addAll(allSeries.subList(screenStartPosition, screenFinishPosition))
-        }
+    override fun getScreenData(): ArrayList<Candle> {
+        visibleScreenData.clear()
+        visibleScreenData.addAll(allSeries.subList(screenStartPosition, screenFinishPosition))
 
-        calcMinMax()
+//        calcMinMax()
 
         return visibleScreenData
     }
 
-    override fun getData(): ArrayList<Quote> {
-        return allSeries as ArrayList<Quote>
+    private fun updateExtremesY() {
+
+    }
+
+    private fun updateExtremesX() {
+    }
+
+    override fun getData(): ArrayList<Candle> {
+        return allSeries
     }
 
     override fun toString(): String {

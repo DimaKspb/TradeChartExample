@@ -2,7 +2,6 @@ package com.dima.tradechart
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Handler
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
@@ -10,9 +9,12 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.widget.Scroller
 import com.dima.tradechart.component.Chart
-import com.dima.tradechart.component.DrawThread
+import com.dima.tradechart.component.ChartConfig
+import com.dima.tradechart.component.DrawJob
 import com.dima.tradechart.component.MyScroller
-import com.dima.tradechart.component.Quote
+import com.dima.tradechart.model.Quote
+import com.dima.tradechart.model.data
+import com.dima.tradechart.series.LineSeries
 import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
@@ -28,7 +30,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     private var chart: Chart? = null
 
     private var scroller: MyScroller? = null
-    private var myThread: DrawThread? = null
+    private var myJob: DrawJob? = null
 
     init {
         myHolder = holder
@@ -37,14 +39,19 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         Log.d("Surface", "surfaceChanged$width , $height")
+        ChartConfig.setDisplayMetrics(resources.displayMetrics)
+
         myHolder = holder
         chart = Chart(height, width)
 
         chart?.apply {
             scroller = MyScroller(context, this)
-            myThread = DrawThread(myHolder, this)
+            myJob = DrawJob(myHolder, this)
+            val mySeries = LineSeries()
+            mySeries.addAllPoint(data())
+            setSeries(mySeries)
 
-            myThread?.startDraw()
+            myJob?.startDraw()
         }
     }
 
@@ -65,7 +72,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         Log.d("Surface", "surfaceDestroyed")
-        myThread?.stopDraw()
+        myJob?.stopDraw()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {

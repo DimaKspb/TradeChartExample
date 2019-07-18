@@ -1,11 +1,21 @@
 package com.dima.tradechart.component
 
-import android.graphics.Color
-import android.graphics.Paint
+import android.util.DisplayMetrics
 
-interface ChartConfig {
-    val offsetRight: Float
-        get() = 140f
-    val offsetBottom: Float
-        get() = 60f
+
+object ChartConfig {
+    private var displayMetrics: DisplayMetrics? = null
+
+    fun setDisplayMetrics(displayMetrics: DisplayMetrics?) {
+        this.displayMetrics = displayMetrics
+    }
+
+    const val offsetRight = 140f
+    const val offsetBottom = 60f
+
+    var pointOnChart = 40
+
+    fun convertDpToPx(dp: Float): Float {
+        return dp * (displayMetrics?.density ?: 1f)
+    }
 }

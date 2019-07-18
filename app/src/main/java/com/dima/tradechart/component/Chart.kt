@@ -1,105 +1,95 @@
 package com.dima.tradechart.component
 
 import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.widget.Scroller
+import com.dima.tradechart.component.ChartConfig.offsetBottom
+import com.dima.tradechart.component.ChartConfig.offsetRight
+import com.dima.tradechart.model.*
 import com.dima.tradechart.render.GridRender
 import com.dima.tradechart.render.LineRender
 import com.dima.tradechart.render.XYAxisRender
 import com.dima.tradechart.series.LineSeries
 
-class Chart(val height: Int = 0, var width: Int = 0) : ChartConfig {
+class Chart(val height: Int = 0, var width: Int = 0) {
     private val typeChart = TypeChart.LINE
-    var isAlreadyInit = false
-    var myLineSeries = LineSeries()
-    var isEndChartVisible = true
+
+    var isChartInit = false
+    var mySeries: BaseSeries<BaseQuote> = LineSeries()
+    private var isEndChartVisible = true
 
     var frame = 1
-    var pointOnChart = 40
 
-    var screenStartPosition = 0
-    private val dY = myLineSeries.maxY - myLineSeries.minY
+    private val dY = mySeries.maxY - mySeries.minY
+
+    private var itScrolling: Scroller? = null
+    var isLeft = false
 
     val chartHeight = height - 50f
     val chartWidth = width - offsetRight
 
     private val axisXYRender = XYAxisRender(this)
-    private val lineRender = LineRender(this)
+    private val lineRender: BaseRender = LineRender(this)
     private val gridRender = GridRender(this)
 
+    private fun getMinY() = mySeries.minY - dY
+    private fun getMaxY() = mySeries.maxY + dY
+
+
     init {
-        myLineSeries.lineSeries = data()
-        screenStartPosition = (myLineSeries.lineSeries.size - pointOnChart)
-        isAlreadyInit = true
+//        mySeries.allSeries = data()
+//        isChartInit = true
     }
 
-    fun getSceneXValue(position: Int): Float = (position) * chartWidth / pointOnChart
+    fun getSceneXValue(x: Double): Float =
+        ((x - mySeries.minX) * chartWidth / (mySeries.maxX - mySeries.minX).toFloat()).toFloat()
 
     fun getSceneYValue(bid: Double): Float =
         ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
 
-    private fun getMinY() = myLineSeries.minY - dY
-    private fun getMaxY() = myLineSeries.maxY + dY
-
     fun updateLastQuote(lineSeries: Quote) {
-        myLineSeries.addLastQuote(lineSeries, frame.toDouble())
-        if (isEndChartVisible)
-            screenStartPosition++
+        mySeries.addOnePoint(lineSeries, frame.toDouble())
+//        if (isEndChartVisible)
+//            screenStartPosition++
+
     }
 
-    @Synchronized
     fun scrolling(needGoToLeft: Boolean): Boolean {
-        when {
-            screenStartPosition == 0 && needGoToLeft -> return false
-            screenStartPosition >= (myLineSeries.lineSeries.size - (pointOnChart / 2)) && !needGoToLeft -> return false
-            needGoToLeft -> screenStartPosition--
-            !needGoToLeft -> screenStartPosition++
-        }
-
-        return true
+//        return mySeries.moveAt(needGoToLeft)
+        return false
     }
 
     fun scale(isZoomOut: Boolean) {
-        when {
-            screenStartPosition == 1 || pointOnChart >= 160 -> return
-            pointOnChart == myLineSeries.lineSeries.size - 1 && isZoomOut || pointOnChart <= 20 && !isZoomOut -> return
-            isZoomOut -> pointOnChart += 10
-            else -> pointOnChart -= 10
-        }
+//        mySeries.scale(isZoomOut)
     }
 
-    fun getEndScreenPosition(): Int {
-        return when {
-            screenStartPosition == 0 && pointOnChart <= myLineSeries.lineSeries.size -> screenStartPosition + pointOnChart
-            screenStartPosition + pointOnChart >= myLineSeries.lineSeries.size -> {
-                isEndChartVisible = true
-                myLineSeries.lineSeries.size - 1
-            }
-            else -> {
-                isEndChartVisible = false
-                screenStartPosition + pointOnChart
-            }
-        }
-    }
-
-    override fun toString(): String {
-        return "Chart(height=$height, width=$width, typeChart=$typeChart)"
-    }
-
-    fun drawRenders(canvas: Canvas) {
+    fun drawRenders(canvas: Canvas, ts: Long) {
         axisXYRender.draw(canvas)
-        lineRender.draw(canvas, myLineSeries)
-        gridRender.draw(canvas, myLineSeries)
+        gridRender.draw(canvas, mySeries)
+        lineRender.draw(canvas, mySeries as LineSeries)
 
-        if (itScrolling?.computeScrollOffset() == true) {
-            scrolling(isLeft)
-        }
+//        if (itScrolling?.computeScrollOffset() == true) {
+//            scrolling(isLeft)
+//        }
     }
-
-    private var itScrolling: Scroller? = null
-    var isLeft = false
 
     fun setScroller(scrolling: Scroller?, value: Boolean = false) {
         itScrolling = scrolling
         isLeft = value
+    }
+
+    fun setSeries(mySeries: BaseSeries<BaseQuote>) {
+        isChartInit = false
+        this.mySeries = mySeries
+        isChartInit = true
+    }
+
+    fun getSeries() = mySeries
+
+
+
+    override fun toString(): String {
+        return "Chart(height=$height, width=$width, typeChart=$typeChart)"
     }
 }
