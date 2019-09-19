@@ -1,12 +1,11 @@
-package com.dima.tradechart.model
+package com.render.tradechart.model
 
 import android.graphics.Canvas
-import com.dima.tradechart.series.CandleSeries
-import com.dima.tradechart.series.LineSeries
+import com.render.tradechart.series.CandleSeries
+import com.render.tradechart.series.LineSeries
 import org.json.JSONArray
 import org.json.JSONObject
 import java.lang.Exception
-import java.util.*
 import kotlin.collections.ArrayList
 
 interface BaseQuote {
@@ -48,7 +47,8 @@ class Candle : BaseQuote {
     override fun getCurrentValue() = open
 }
 
-data class Quote(var bid: Double, val ask: Double, val time: Long) : BaseQuote {
+data class Quote(var bid: Double, val ask: Double, val time: Long) :
+    BaseQuote {
     val timeDouble = time.toDouble()
 
     override fun getCurrentTime() = timeDouble

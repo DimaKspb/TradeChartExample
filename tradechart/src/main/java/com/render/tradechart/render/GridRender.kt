@@ -1,22 +1,21 @@
-package com.dima.tradechart.render
+package com.render.tradechart.render
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.dima.tradechart.model.BaseRender
-import com.dima.tradechart.component.Chart
+import com.render.tradechart.model.BaseRender
+import com.render.tradechart.component.Chart
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.*
-import com.dima.tradechart.model.BaseQuote
-import com.dima.tradechart.model.BaseSeries
-import java.lang.Character.FORMAT
+import com.render.tradechart.model.BaseQuote
+import com.render.tradechart.model.BaseSeries
 import java.text.NumberFormat
 import java.text.ParseException
 
 
-class GridRender(private val chart: Chart) : BaseRender {
+class GridRender(private val chart: Chart) :
+    BaseRender {
 //    private val stepWidth = chart.chartWidth / BOARD_LINES
 //    private val stepHeight = chart.chartHeight / BOARD_LINES
 
@@ -41,7 +40,9 @@ class GridRender(private val chart: Chart) : BaseRender {
     }
 
     override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
-        computeGrid(verticalValues, chart.mySeries.minY, chart.mySeries.maxY, VERTICAL_LINES_COUNT)
+        computeGrid(verticalValues, chart.mySeries.minY, chart.mySeries.maxY,
+            VERTICAL_LINES_COUNT
+        )
 
         for (value in verticalValues) {
             if (value.isNaN()) {
@@ -50,7 +51,9 @@ class GridRender(private val chart: Chart) : BaseRender {
             drawYLabel(canvas, chart, value)
         }
 
-        computeGrid(horizontalValues, chart.mySeries.minX, chart.mySeries.maxX, HORIZONTAL_LINES_COUNT)
+        computeGrid(horizontalValues, chart.mySeries.minX, chart.mySeries.maxX,
+            HORIZONTAL_LINES_COUNT
+        )
 
         for (value in horizontalValues)
             drawXLabel(canvas, chart, value)

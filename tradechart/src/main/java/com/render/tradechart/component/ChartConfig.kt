@@ -1,4 +1,4 @@
-package com.dima.tradechart.component
+package com.render.tradechart.component
 
 import android.util.DisplayMetrics
 
@@ -7,7 +7,7 @@ object ChartConfig {
     private var displayMetrics: DisplayMetrics? = null
 
     fun setDisplayMetrics(displayMetrics: DisplayMetrics?) {
-        this.displayMetrics = displayMetrics
+        ChartConfig.displayMetrics = displayMetrics
     }
 
     const val offsetRight = 140f

@@ -1,9 +1,9 @@
-package com.dima.tradechart.series
+package com.render.tradechart.series
 
-import com.dima.tradechart.component.ChartConfig.pointOnChart
-import com.dima.tradechart.model.BaseSeries
-import com.dima.tradechart.model.Candle
-import com.dima.tradechart.model.Quote
+import com.render.tradechart.component.ChartConfig.pointOnChart
+import com.render.tradechart.model.BaseSeries
+import com.render.tradechart.model.Candle
+import com.render.tradechart.model.Quote
 import kotlin.collections.ArrayList
 
 class LineSeries : BaseSeries<Quote>() {
@@ -13,7 +13,13 @@ class LineSeries : BaseSeries<Quote>() {
 
     override fun addAllPoint(array: ArrayList<Candle>) {
         allSeries.clear()
-        allSeries.addAll(array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>)
+        allSeries.addAll(array.map {
+            Quote(
+                it.open,
+                0.0,
+                it.time
+            )
+        } as ArrayList<Quote>)
 
         screenFinishPosition = allSeries.size
         screenStartPosition = allSeries.size - 10

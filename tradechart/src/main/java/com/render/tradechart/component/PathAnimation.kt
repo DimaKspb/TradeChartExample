@@ -1,9 +1,9 @@
-package com.dima.tradechart.component
+package com.render.tradechart.component
 
 import android.graphics.Path
 import android.util.Log
-import com.dima.tradechart.model.BaseSeries
-import com.dima.tradechart.model.BaseQuote
+import com.render.tradechart.model.BaseSeries
+import com.render.tradechart.model.BaseQuote
 
 
 class PathAnimation : Path() {

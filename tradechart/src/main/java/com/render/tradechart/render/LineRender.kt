@@ -1,13 +1,14 @@
-package com.dima.tradechart.render
+package com.render.tradechart.render
 
 import android.animation.ValueAnimator
 import android.graphics.*
-import com.dima.tradechart.model.BaseRender
-import com.dima.tradechart.component.Chart
-import com.dima.tradechart.series.LineSeries
+import com.render.tradechart.model.BaseRender
+import com.render.tradechart.component.Chart
+import com.render.tradechart.series.LineSeries
 
 
-class LineRender(private val chart: Chart) : BaseRender {
+class LineRender(private val chart: Chart) :
+    BaseRender {
     private val p = Path()
     private val paintLine = Paint().apply {
         color = Color.BLUE

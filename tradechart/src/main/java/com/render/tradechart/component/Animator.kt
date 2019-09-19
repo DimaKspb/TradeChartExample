@@ -1,4 +1,4 @@
-package com.dima.tradechart.component
+package com.render.tradechart.component
 
 class Animator(private val duration: Long) {
     private var startAnimationTs: Long = 0

@@ -1,22 +1,21 @@
-package com.dima.tradechart.component
+package com.render.tradechart.component
 
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.widget.Scroller
-import com.dima.tradechart.component.ChartConfig.offsetBottom
-import com.dima.tradechart.component.ChartConfig.offsetRight
-import com.dima.tradechart.model.*
-import com.dima.tradechart.render.GridRender
-import com.dima.tradechart.render.LineRender
-import com.dima.tradechart.render.XYAxisRender
-import com.dima.tradechart.series.LineSeries
+import com.render.tradechart.component.ChartConfig.offsetBottom
+import com.render.tradechart.component.ChartConfig.offsetRight
+import com.render.tradechart.model.*
+import com.render.tradechart.render.GridRender
+import com.render.tradechart.render.LineRender
+import com.render.tradechart.render.XYAxisRender
+import com.render.tradechart.series.LineSeries
 
 class Chart(val height: Int = 0, var width: Int = 0) {
     private val typeChart = TypeChart.LINE
 
     var isChartInit = false
-    var mySeries: BaseSeries<BaseQuote> = LineSeries()
+    var mySeries: BaseSeries<BaseQuote> =
+        LineSeries()
     private var isEndChartVisible = true
 
     var frame = 1
@@ -86,7 +85,6 @@ class Chart(val height: Int = 0, var width: Int = 0) {
     }
 
     fun getSeries() = mySeries
-
 
 
     override fun toString(): String {
