@@ -3,7 +3,7 @@ package com.render.tradechart.render
 import android.animation.ValueAnimator
 import android.graphics.*
 import com.render.tradechart.model.BaseRender
-import com.render.tradechart.component.Chart
+import com.render.tradechart.chart.Chart
 import com.render.tradechart.series.LineSeries
 
 
@@ -17,7 +17,7 @@ class LineRender(private val chart: Chart) :
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas, series: LineSeries) {
+    override fun draw(canvas: MyDraw, series: LineSeries) {
         p.rewind()
 
         val mySeries = series.getScreenData()

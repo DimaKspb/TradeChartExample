@@ -1,11 +1,8 @@
 package com.render.tradechart.model
 
-import android.graphics.Canvas
-import com.render.tradechart.series.CandleSeries
-import com.render.tradechart.series.LineSeries
+import com.render.tradechart.draw.MyDraw
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.Exception
 import kotlin.collections.ArrayList
 
 interface BaseQuote {
@@ -30,34 +27,20 @@ class Candle : BaseQuote {
         timeToDouble = time.toDouble()
     }
 
-    constructor(jsonArray: JSONObject) {
-        try {
-            this.open = jsonArray.getDouble("open") / 100000
-            this.close = (jsonArray.getDouble("open") + jsonArray.getDouble("close")) / 100000
-            this.low = (jsonArray.getDouble("open") + jsonArray.getDouble("low")) / 100000
-            this.height = (jsonArray.getDouble("open") + jsonArray.getDouble("high")) / 100000
-            this.time = jsonArray.getLong("ctm") * 1000
-            timeToDouble = time.toDouble()
-        } catch (exp: Exception) {
-            exp.printStackTrace()
-        }
-    }
-
     override fun getCurrentTime() = time.toDouble()
     override fun getCurrentValue() = open
 }
 
-data class Quote(var bid: Double, val ask: Double, val time: Long) :
-    BaseQuote {
+data class Quote(var bid: Double, val ask: Double, val time: Long) : BaseQuote {
     val timeDouble = time.toDouble()
 
     override fun getCurrentTime() = timeDouble
     override fun getCurrentValue() = bid
 }
 
-abstract class BaseSeries<out T : BaseQuote> {
-    abstract val visibleScreenData: ArrayList<out T>
-    abstract val allSeries: ArrayList<out T>
+abstract class BaseSeries<T : BaseQuote> {
+    abstract val visibleScreenData: ArrayList<T>
+    abstract val allSeries: ArrayList<T>
 
     protected var screenStartPosition = 0
     protected var screenFinishPosition = 0
@@ -85,10 +68,7 @@ abstract class BaseSeries<out T : BaseQuote> {
 }
 
 interface BaseRender {
-    fun draw(canvas: Canvas) {}
-    fun draw(canvas: Canvas, series: LineSeries) {}
-    fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {}
-    fun draw(canvas: Canvas, series: CandleSeries) {}
+    fun draw(canvas: MyDraw, baseSeries: BaseSeries<*>)
 }
 
 enum class TypeChart {
@@ -103,7 +83,7 @@ fun data(): ArrayList<Candle> {
             )
 
     for (i in 0 until data.length()) {
-        myArray.add(Candle((data[i] as JSONObject)))
+//        myArray.add(Candle((data[i] as JSONObject)))
     }
 
     return myArray

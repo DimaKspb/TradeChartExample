@@ -1,21 +1,19 @@
 package com.render.tradechart.render
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import com.render.tradechart.model.BaseRender
-import com.render.tradechart.component.Chart
+import com.render.tradechart.chart.Chart
+import com.render.tradechart.draw.MyDraw
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.*
 import com.render.tradechart.model.BaseQuote
-import com.render.tradechart.model.BaseSeries
 import java.text.NumberFormat
 import java.text.ParseException
 
 
-class GridRender(private val chart: Chart) :
-    BaseRender {
+class GridRender(private val chart: Chart) : BaseRender<BaseQuote> {
 //    private val stepWidth = chart.chartWidth / BOARD_LINES
 //    private val stepHeight = chart.chartHeight / BOARD_LINES
 
@@ -39,10 +37,8 @@ class GridRender(private val chart: Chart) :
         textSize = 22f
     }
 
-    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
-        computeGrid(verticalValues, chart.mySeries.minY, chart.mySeries.maxY,
-            VERTICAL_LINES_COUNT
-        )
+    override fun draw(canvas: MyDraw, baseSeries: BaseQuote) {
+        computeGrid(verticalValues, chart.mySeries.minY, chart.mySeries.maxY, VERTICAL_LINES_COUNT)
 
         for (value in verticalValues) {
             if (value.isNaN()) {
@@ -52,7 +48,7 @@ class GridRender(private val chart: Chart) :
         }
 
         computeGrid(horizontalValues, chart.mySeries.minX, chart.mySeries.maxX,
-            HORIZONTAL_LINES_COUNT
+                HORIZONTAL_LINES_COUNT
         )
 
         for (value in horizontalValues)
@@ -61,12 +57,12 @@ class GridRender(private val chart: Chart) :
         drawerBorder(canvas, chart)
     }
 
-    private fun drawerBorder(canvas: Canvas, chart: Chart) {
+    private fun drawerBorder(canvas: MyDraw, chart: Chart) {
         canvas.drawLine(0f, chart.height.toFloat(), chart.width.toFloat(), chart.height.toFloat(), gridLinesPaint)
         canvas.drawLine(chart.width.toFloat(), 0f, chart.width.toFloat(), chart.height.toFloat(), gridLinesPaint)
     }
 
-    private fun drawXLabel(canvas: Canvas, chart: Chart, values: Double) {
+    private fun drawXLabel(canvas: MyDraw, chart: Chart, values: Double) {
         canvas.drawLine(chart.getSceneXValue(values), 0f, chart.getSceneXValue(values), chart.height.toFloat(), gridLinesPaint)
         val label = formatDate.format(values)
         val labelWidth = textLabelsPaint.measureText(label)
@@ -74,7 +70,7 @@ class GridRender(private val chart: Chart) :
         canvas.drawText(label!!, (chart.getSceneXValue(values)) - labelWidth / 2f, chart.height - 40f, textLabelsPaint)
     }
 
-    private fun drawYLabel(canvas: Canvas, chart: Chart, values: Double) {
+    private fun drawYLabel(canvas: MyDraw, chart: Chart, values: Double) {
         canvas.drawLine(0f, chart.getSceneYValue(values), chart.width.toFloat(), chart.getSceneYValue(values), gridLinesPaint)
         val label = values.toString()
         val labelWidth = textLabelsPaint.measureText(label)
@@ -92,7 +88,6 @@ class GridRender(private val chart: Chart) :
         values.clear()
         for (idx in 0 until numLines) {
             var ln = xStart + idx.toDouble() * xStep
-
             try {
                 ln = FORMAT.parse(FORMAT.format(ln)).toDouble()
             } catch (var12: ParseException) {

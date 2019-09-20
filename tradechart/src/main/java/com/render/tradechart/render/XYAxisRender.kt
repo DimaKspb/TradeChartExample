@@ -1,11 +1,11 @@
 package com.render.tradechart.render
 
-import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import com.render.tradechart.model.BaseRender
-import com.render.tradechart.component.Chart
+import com.render.tradechart.chart.Chart
 import com.render.tradechart.component.ChartConfig
+import com.render.tradechart.draw.MyDraw
 
 class XYAxisRender(private val chart: Chart) :
     BaseRender {
@@ -16,7 +16,7 @@ class XYAxisRender(private val chart: Chart) :
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun draw(canvas: MyDraw) {
         //horizontal
         canvas.drawLine(0f, chart.chartHeight, chart.width.toFloat() - ChartConfig.offsetRight, chart.chartHeight, myPaintLine)
         //vertical
