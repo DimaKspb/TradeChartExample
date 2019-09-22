@@ -11,36 +11,18 @@ class LineSeries : BaseSeries<Quote>() {
     override val visibleScreenData = ArrayList<Quote>()
     override val allSeries = ArrayList<Quote>()
 
-    override fun addAllPoint(array: ArrayList<Candle>) {
+    override fun updateLastQuote(array: ArrayList<Candle>) {
         allSeries.clear()
         allSeries.addAll(array.map {
-            Quote(
-                it.open,
-                0.0,
-                it.time
-            )
+            Quote(it.open,0.0,it.time)
         } as ArrayList<Quote>)
 
-        screenFinishPosition = allSeries.size
-        screenStartPosition = allSeries.size - 10
+//        screenFinishPosition = allSeries.size
+//        screenStartPosition = allSeries.size - 10
     }
 
-    override fun addOnePoint(quote: Quote, frame: Double) {
-        if (getLast().time > quote.time) return
-//        Log.d("SeriesS1", getLast().time.toString() + "," + getLast().bid)
-        if (getLast().time + (frame * 1000) > quote.time) {
-//            quote.time = getLast().time + frame + 10
-//            Log.d("SeriesS3", quote.time.toLong().toString())
-        }
-        if (getLast().bid == quote.bid) return
-//
-        if (quote.time - getLast().time <= frame) {
-//            Log.d("Series", "change ${quote.time} , ${getLast().time}")
-            allSeries[allSeries.size - 1].bid = quote.bid
-        } else {
-//            Log.d("Series", "add ${quote.time} , ${getLast().time}")
-            allSeries.add(quote)
-        }
+    override fun updateAllQuote(quote: Quote) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     private fun getLast() = allSeries[allSeries.size - 1]

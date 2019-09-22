@@ -40,7 +40,7 @@
 ////    fun getSceneYValue(bid: Double): Float = ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
 //
 //    fun updateLastQuote(lineSeries: Quote) {
-//        mySeries.addOnePoint(lineSeries, frame.toDouble())
+//        mySeries.updateLasteQuote(lineSeries, frame.toDouble())
 ////        if (isEndChartVisible)
 ////            screenStartPosition++
 //

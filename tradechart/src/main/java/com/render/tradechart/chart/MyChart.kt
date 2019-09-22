@@ -1,17 +1,15 @@
 package com.render.tradechart.chart
 
 import com.render.tradechart.model.BaseSeries
+import com.render.tradechart.model.TypeChart
+import com.render.tradechart.render.LineRender
+import com.render.tradechart.series.LineSeries
 
 class MyChart : BaseChart() {
 
-    override fun setSeries(baseSeries: BaseSeries<*>) {
-        currentSeries = baseSeries
-    }
 
-    override fun setSize(w: Int, h: Int) {
-        width = w
-        height = h
+    init {
+        renders.add(LineRender(this))
     }
-
 
 }

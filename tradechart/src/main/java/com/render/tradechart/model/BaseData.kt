@@ -1,8 +1,6 @@
 package com.render.tradechart.model
 
-import com.render.tradechart.draw.MyDraw
 import org.json.JSONArray
-import org.json.JSONObject
 import kotlin.collections.ArrayList
 
 interface BaseQuote {
@@ -44,6 +42,7 @@ abstract class BaseSeries<T : BaseQuote> {
 
     protected var screenStartPosition = 0
     protected var screenFinishPosition = 0
+    protected var currentFrame = 1
 
     var minY = 0.0
     var maxY = 0.0
@@ -53,8 +52,12 @@ abstract class BaseSeries<T : BaseQuote> {
     abstract fun getData(): ArrayList<out T>
     abstract fun getScreenData(): ArrayList<out T>
 
-    abstract fun addAllPoint(array: ArrayList<Candle>)
-    abstract fun addOnePoint(quote: Quote, frame: Double)
+    fun setFrame(frame: Int) {
+        currentFrame = frame
+    }
+
+    abstract fun updateLastQuote(array: ArrayList<Candle>)
+    abstract fun updateAllQuote(quote: Quote)
 
     fun calcMinMax() {
         if (visibleScreenData.size == 0) return
@@ -68,7 +71,7 @@ abstract class BaseSeries<T : BaseQuote> {
 }
 
 interface BaseRender {
-    fun draw(canvas: MyDraw, baseSeries: BaseSeries<*>)
+    fun draw(series: BaseSeries<*>)
 }
 
 enum class TypeChart {
