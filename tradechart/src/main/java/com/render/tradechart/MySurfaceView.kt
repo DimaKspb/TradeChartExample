@@ -1,7 +1,6 @@
 package com.render.tradechart
 
 import android.content.Context
-import android.opengl.GLES10.GL_MULTISAMPLE
 import android.opengl.GLES30.*
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
@@ -67,15 +66,16 @@ class MySurfaceView : GLSurfaceView {
 
         override fun onSurfaceChanged(p0: GL10?, w: Int, h: Int) {
             glViewport(0, 0, w, h)
+
             chart.setSize(w, h)
         }
 
         override fun onSurfaceCreated(p0: GL10?, p1: EGLConfig?) {
             glClearColor(0.3f, 0.3f, 0.3f, 1.0f)
-            val programId = ShaderUtils.getProgrammID(context)
+            val programId = ShaderUtils.createGLPrograms(context)
             glUseProgram(programId)
 
-            aColorLocation = glGetUniformLocation(programId, "u_Color")
+            aColorLocation = glGetUniformLocation(programId, "color")
             glUniform4f(aColorLocation, 0.0f, 0.0f, 1.0f, 1.0f)
             aPositionLocation = glGetAttribLocation(programId, "a_Position")
 //            vertexData.position(0)
