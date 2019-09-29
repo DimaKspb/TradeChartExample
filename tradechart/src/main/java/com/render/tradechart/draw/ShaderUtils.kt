@@ -3,7 +3,7 @@ package com.render.tradechart.draw
 
 import android.content.Context
 import android.content.res.Resources
-import android.opengl.GLES30.*
+import android.opengl.GLES20.*
 import android.util.Log
 import com.render.tradechart.R
 import java.io.BufferedReader
@@ -11,7 +11,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 object ShaderUtils {
-   private val status = IntArray(1)
+    private val status = IntArray(1)
 
     fun createGLPrograms(context: Context): Int {
         val vertexShaderId = createShader(context, GL_VERTEX_SHADER, R.raw.vertex)
@@ -28,12 +28,12 @@ object ShaderUtils {
         glCompileShader(shaderId)
         glGetShaderiv(shaderId, GL_COMPILE_STATUS, status, 0)
 
-        getShaderCompileLog(shaderId)
-
         if (status[0] == 0) {
-            glDeleteShader(shaderId)
+            getShaderCompileLog(shaderId)
+            Log.d("Shader", "Dont Create")
             return 0
         }
+//        glDeleteShader(shaderId)
 
         return shaderId
     }
@@ -49,6 +49,9 @@ object ShaderUtils {
         glLinkProgram(programId)
         glGetProgramiv(programId, GL_LINK_STATUS, status, 0)
         if (status[0] == 0) {
+            Log.d("Shader", "Dont link")
+            getShaderCompileLog(vertexShaderId)
+            getShaderCompileLog(fragmentShaderId)
             glDeleteProgram(programId)
             return 0
         }
