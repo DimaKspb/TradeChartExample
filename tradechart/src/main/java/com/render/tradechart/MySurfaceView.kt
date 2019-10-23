@@ -111,7 +111,7 @@ class MySurfaceView : GLSurfaceView {
         private fun render() {
             glUniform1f(timeLoc, time)
 
-            glDrawArrays(GL_TRIANGLES, 0, trinagle.size / 2)
+            glDrawArrays(GL_LINE_STRIP, 0, trinagle.size / 2)
         }
     }
 }
