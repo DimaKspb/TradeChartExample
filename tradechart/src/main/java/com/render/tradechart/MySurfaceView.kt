@@ -66,7 +66,7 @@ class MySurfaceView : GLSurfaceView {
 
             val ts2 = System.currentTimeMillis()
             if (ts != ts2) {
-                Log.d("GL", "FPS: " + 1000 / (ts2 - ts).toFloat())
+//                Log.d("GL", "FPS: " + 1000 / (ts2 - ts).toFloat())
             }
         }
 
@@ -109,8 +109,7 @@ class MySurfaceView : GLSurfaceView {
         )
 
         private fun render() {
-            glUniform1f(timeLoc, time)
-
+            glLineWidth(4f)
             glDrawArrays(GL_LINE_STRIP, 0, trinagle.size / 2)
         }
     }
