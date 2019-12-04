@@ -14,12 +14,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        buttun1.setOnClickListener {
-            GlobalScope.launch(Dispatchers.Default) {
-                svChart?.initRandomData()
-            }
-        }
-        btnLeft.setOnClickListener { svChart.move(1) }
-        btnRight.setOnClickListener { svChart.move(-1) }
+        buttun1.setOnClickListener {}
+        btnLeft.setOnClickListener { }
+        btnRight.setOnClickListener {}
     }
 }

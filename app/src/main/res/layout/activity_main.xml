@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.dima.tradechart.MySurfaceView
+    <com.render.tradechart.MySurfaceView
         android:id="@+id/svChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
