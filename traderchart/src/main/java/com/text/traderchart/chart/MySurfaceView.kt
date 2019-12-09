@@ -1,4 +1,4 @@
-package com.dima.tradechart
+package com.text.traderchart.chart
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -7,15 +7,13 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.widget.Scroller
-import com.dima.tradechart.component.Chart
+import com.text.traderchart.chart.component.Chart
 import com.dima.tradechart.component.ChartConfig
-import com.dima.tradechart.component.DrawJob
+import com.text.traderchart.chart.component.DrawThread
 import com.dima.tradechart.component.MyScroller
 import com.dima.tradechart.model.Quote
 import com.dima.tradechart.model.data
 import com.dima.tradechart.series.LineSeries
-import kotlinx.coroutines.delay
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -30,7 +28,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
     private var chart: Chart? = null
 
     private var scroller: MyScroller? = null
-    private var myJob: DrawJob? = null
+    private var drawThread = DrawThread()
 
     init {
         myHolder = holder
@@ -42,24 +40,21 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         ChartConfig.setDisplayMetrics(resources.displayMetrics)
 
         myHolder = holder
-        chart = Chart(height, width)
 
-        chart?.apply {
+        chart = Chart(height, width).apply {
             scroller = MyScroller(context, this)
-            myJob = DrawJob(myHolder, this)
-            val mySeries = LineSeries()
-            mySeries.addAllPoint(data())
-            setSeries(mySeries)
+            val series = LineSeries().apply {
+                addAllPoint(data())
+                setSeries(mySeries)
+            }
+            setSeries(series)
 
-            myJob?.startDraw()
+            drawThread.setHolder(myHolder)
+            drawThread.setChart(this)
+
+            drawThread.start()
         }
     }
-
-    private var mLastFlingY: Int = 0
-    private var mLastY: Float = 0.toFloat()
-    private var mDeltaY: Float = 0.toFloat()
-    private var mScrollEventChecker: Scroller? = null
-    private var counter = 0
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
@@ -72,24 +67,15 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         Log.d("Surface", "surfaceDestroyed")
-        myJob?.stopDraw()
+        drawThread?.stopDraw()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
         Log.d("Surface", "surfaceCreated")
     }
 
-    suspend fun initRandomData() {
-        while (true) {
-            delay(1500)
-            chart?.updateLastQuote(
-                Quote(
-                    ThreadLocalRandom.current().nextDouble(1.15080, 1.15100),
-                    0.0,
-                    Calendar.getInstance().timeInMillis
-                )
-            )
-        }
+    fun initRandomData() {
+        chart?.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15080, 1.15100), 0.0, Calendar.getInstance().timeInMillis))
     }
 
     fun move(i: Int) {

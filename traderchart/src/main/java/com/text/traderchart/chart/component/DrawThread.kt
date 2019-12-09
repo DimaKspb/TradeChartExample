@@ -1,45 +1,47 @@
-package com.dima.tradechart.component
+package com.text.traderchart.chart.component
 
 import android.graphics.Color
 import android.graphics.Paint
 import android.view.SurfaceHolder
-import kotlinx.coroutines.*
 import java.lang.Exception
 
-
-class DrawJob(private val surfaceHolder: SurfaceHolder, private val chart: Chart) {
-    private var job: Job? = null
+class DrawThread : Thread() {
     private var isDrawing = false
     private var lastTs = 0L
+    private var chart = Chart()
+    private var surfaceHolder: SurfaceHolder? = null
+
     private val textPaint = Paint().apply {
         textSize = 37f
         color = Color.BLACK
     }
 
-    fun startDraw() {
+    fun setChart(chart: Chart) {
+        this.chart = chart
+    }
+
+    override fun run() {
         try {
-            job = GlobalScope.launch(Dispatchers.Default) {
-                isDrawing = true
+            isDrawing = true
 
-                while (isDrawing) {
-                    if (!chart.isChartInit) return@launch
+            while (isDrawing) {
+                if (!chart.isChartInit) return
 
-                    val ts = System.currentTimeMillis()
-                    measureFps(ts)
-                    if (surfaceHolder.surface.isValid) {
-                        val canvas = surfaceHolder.lockCanvas()
-                        canvas?.apply {
+                val ts = System.currentTimeMillis()
+                measureFps(ts)
+                if (surfaceHolder?.surface?.isValid == true) {
+                    val canvas = surfaceHolder?.lockCanvas()
+                    canvas?.apply {
 
-                            drawColor(Color.WHITE)
-                            chart.drawRenders(this, ts)
+                        drawColor(Color.WHITE)
+                        chart.drawRenders(this, ts)
 
-                            canvas.drawText(fps.toString(), 20F, (height / 2).toFloat(), textPaint)
+                        canvas.drawText(fps.toString(), 20F, (height / 2).toFloat(), textPaint)
 
-                            surfaceHolder.unlockCanvasAndPost(this)
+                        surfaceHolder?.unlockCanvasAndPost(this)
 
 
-                            lastTs = ts
-                        }
+                        lastTs = ts
                     }
                 }
             }
@@ -76,6 +78,10 @@ class DrawJob(private val surfaceHolder: SurfaceHolder, private val chart: Chart
     fun stopDraw() {
         isDrawing = false
         chart.isChartInit = false
-        job?.cancel()
+        join()
+    }
+
+    fun setHolder(myHolder: SurfaceHolder) {
+        surfaceHolder = myHolder
     }
 }

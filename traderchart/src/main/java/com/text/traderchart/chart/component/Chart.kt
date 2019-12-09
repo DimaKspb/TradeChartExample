@@ -1,8 +1,6 @@
-package com.dima.tradechart.component
+package com.text.traderchart.chart.component
 
 import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.widget.Scroller
 import com.dima.tradechart.component.ChartConfig.offsetBottom
 import com.dima.tradechart.component.ChartConfig.offsetRight

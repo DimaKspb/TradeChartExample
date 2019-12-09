@@ -4,11 +4,8 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import com.dima.tradechart.model.BaseRender
-import com.dima.tradechart.model.BaseSeries
-import com.dima.tradechart.model.BaseQuote
-import com.dima.tradechart.component.Chart
+import com.text.traderchart.chart.component.Chart
 import com.dima.tradechart.component.ChartConfig
-import com.dima.tradechart.series.LineSeries
 
 class XYAxisRender(private val chart: Chart) : BaseRender {
 

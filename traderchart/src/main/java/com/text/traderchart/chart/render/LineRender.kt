@@ -3,7 +3,7 @@ package com.dima.tradechart.render
 import android.animation.ValueAnimator
 import android.graphics.*
 import com.dima.tradechart.model.BaseRender
-import com.dima.tradechart.component.Chart
+import com.text.traderchart.chart.component.Chart
 import com.dima.tradechart.series.LineSeries
 
 

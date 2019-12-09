@@ -7,16 +7,13 @@ import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import android.widget.Scroller
-import kotlinx.coroutines.*
+import com.text.traderchart.chart.component.Chart
 
 
 class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.SimpleOnGestureListener(),
     ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
     private var scaleFactor = 20
     private var scaleFactor2 = -20
-
-    val job = Job()
-    val ioScope = CoroutineScope(Dispatchers.IO + job)
 
     var lastX: Float = 0f
     var isScale = false
