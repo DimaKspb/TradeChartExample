@@ -6,8 +6,11 @@ import com.text.traderchart.chart.model.BaseQuote
 import com.text.traderchart.chart.model.BaseRender
 import com.text.traderchart.chart.model.BaseSeries
 
+
 class LineRender(private val chart: Chart) : BaseRender {
+
     private val p = Path()
+
     private val paintLine = Paint().apply {
         color = Color.BLUE
         style = Paint.Style.STROKE
@@ -18,10 +21,33 @@ class LineRender(private val chart: Chart) : BaseRender {
     private val matrix = Matrix()
 
     override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
-       drawPath(canvas,series)
+        drawAsLine(canvas, series.getData())
     }
 
-    private fun drawPath(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+    private fun drawAsLine(canvas: Canvas, series: ArrayList<out BaseQuote>) {
+        val source = arrayListOf<Float>()
+
+        for (i in 0 until series.size step 2) {
+            if (i != 0) {
+                source.add(chart.getSceneXValue(series[i - 1].getCurrentTime()))
+                source.add(chart.getSceneYValue(series[i - 1].getCurrentValue()))
+            }
+            source.add(chart.getSceneXValue(series[i].getCurrentTime()))
+            source.add(chart.getSceneYValue(series[i].getCurrentValue()))
+
+            source.add(chart.getSceneXValue(series[i + 1].getCurrentTime()))
+            source.add(chart.getSceneYValue(series[i + 1].getCurrentValue()))
+        }
+
+        val floatArray = FloatArray(source.size / 2)
+
+        for (i in 0 until source.size/2){
+            floatArray[i] = source[i]
+        }
+        canvas.drawLines(floatArray, paintLine)
+    }
+
+    private fun drawAsPath(canvas: Canvas, series: BaseSeries<BaseQuote>) {
         p.reset()
 
         val points = floatArrayOf()
