@@ -1,9 +1,9 @@
-package com.dima.tradechart.series
+package com.text.traderchart.chart.series
 
-import com.dima.tradechart.component.ChartConfig.pointOnChart
-import com.dima.tradechart.model.BaseSeries
-import com.dima.tradechart.model.Candle
-import com.dima.tradechart.model.Quote
+import com.text.traderchart.chart.component.ChartConfig.pointOnChart
+import com.text.traderchart.chart.model.BaseSeries
+import com.text.traderchart.chart.model.Candle
+import com.text.traderchart.chart.model.Quote
 import kotlin.collections.ArrayList
 
 class CandleSeries : BaseSeries<Candle>() {

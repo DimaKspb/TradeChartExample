@@ -1,11 +1,13 @@
-package com.dima.tradechart.render
+package com.text.traderchart.chart.render
 
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.dima.tradechart.model.BaseRender
+import com.text.traderchart.chart.model.BaseRender
 import com.text.traderchart.chart.component.Chart
-import com.dima.tradechart.component.ChartConfig
+import com.text.traderchart.chart.component.ChartConfig
+import com.text.traderchart.chart.model.BaseQuote
+import com.text.traderchart.chart.model.BaseSeries
 
 class XYAxisRender(private val chart: Chart) : BaseRender {
 
@@ -15,7 +17,7 @@ class XYAxisRender(private val chart: Chart) : BaseRender {
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas) {
+    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
         //horizontal
         canvas.drawLine(0f, chart.chartHeight, chart.width.toFloat() - ChartConfig.offsetRight, chart.chartHeight, myPaintLine)
         //vertical

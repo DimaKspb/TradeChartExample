@@ -1,9 +1,8 @@
-package com.dima.tradechart.series
+package com.text.traderchart.chart.series
 
-import com.dima.tradechart.component.ChartConfig.pointOnChart
-import com.dima.tradechart.model.BaseSeries
-import com.dima.tradechart.model.Candle
-import com.dima.tradechart.model.Quote
+import com.text.traderchart.chart.model.BaseSeries
+import com.text.traderchart.chart.model.Candle
+import com.text.traderchart.chart.model.Quote
 import kotlin.collections.ArrayList
 
 class LineSeries : BaseSeries<Quote>() {
@@ -15,8 +14,10 @@ class LineSeries : BaseSeries<Quote>() {
         allSeries.clear()
         allSeries.addAll(array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>)
 
+        screenStartPosition = allSeries.size / 2
         screenFinishPosition = allSeries.size
-        screenStartPosition = allSeries.size - 10
+
+        onUpdateSeries()
     }
 
     override fun addOnePoint(quote: Quote, frame: Double) {
@@ -35,18 +36,13 @@ class LineSeries : BaseSeries<Quote>() {
 //            Log.d("Series", "add ${quote.time} , ${getLast().time}")
             allSeries.add(quote)
         }
+
+        onUpdateSeries()
     }
 
     private fun getLast() = allSeries[allSeries.size - 1]
 
     override fun getScreenData(): ArrayList<out Quote> {
-        synchronized(allSeries) {
-            visibleScreenData.clear()
-            visibleScreenData.addAll(allSeries.subList(screenStartPosition, screenFinishPosition))
-        }
-
-        calcMinMax()
-
         return visibleScreenData
     }
 
@@ -58,37 +54,12 @@ class LineSeries : BaseSeries<Quote>() {
         return "LineSeries(allSeries=$allSeries)"
     }
 
-    fun moveAt(needGoToLeft: Boolean): Boolean {
-        when {
-            screenStartPosition == 0 && needGoToLeft -> return false
-            screenStartPosition >= (allSeries.size - (pointOnChart / 2)) && !needGoToLeft -> return false
-            needGoToLeft -> screenStartPosition--
-            !needGoToLeft -> screenStartPosition++
+    private fun onUpdateSeries() {
+        synchronized(allSeries) {
+            visibleScreenData.clear()
+            visibleScreenData.addAll(allSeries.subList(screenStartPosition, screenFinishPosition))
         }
 
-        return false
-    }
-
-    fun scale(isZoomOut: Boolean) {
-        when {
-            screenStartPosition == 1 || pointOnChart >= 160 -> return
-            pointOnChart == allSeries.size - 1 && isZoomOut || pointOnChart <= 20 && !isZoomOut -> return
-            isZoomOut -> pointOnChart += 10
-            else -> pointOnChart -= 10
-        }
-    }
-
-    fun getEndScreenPosition(): Int {
-        return when {
-            screenStartPosition == 0 && pointOnChart <= allSeries.size -> screenStartPosition + pointOnChart
-            screenStartPosition + pointOnChart >= allSeries.size -> {
-//                isEndChartVisible = true
-                allSeries.size - 1
-            }
-            else -> {
-//                isEndChartVisible = false
-                screenStartPosition + pointOnChart
-            }
-        }
+        calcMinMax()
     }
 }

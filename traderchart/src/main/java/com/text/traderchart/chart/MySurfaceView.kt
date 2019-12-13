@@ -8,12 +8,12 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.text.traderchart.chart.component.Chart
-import com.dima.tradechart.component.ChartConfig
+import com.text.traderchart.chart.component.ChartConfig
 import com.text.traderchart.chart.component.DrawThread
 import com.dima.tradechart.component.MyScroller
-import com.dima.tradechart.model.Quote
-import com.dima.tradechart.model.data
-import com.dima.tradechart.series.LineSeries
+import com.text.traderchart.chart.model.Quote
+import com.text.traderchart.chart.model.data
+import com.text.traderchart.chart.series.LineSeries
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 

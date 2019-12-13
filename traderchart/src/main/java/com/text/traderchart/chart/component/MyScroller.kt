@@ -38,7 +38,7 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
 
     override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
         scroller?.fling(0, 0, -velocityX.toInt(), 0, -1000, 1000, 0, 0)
-        chart?.setScroller(scroller, velocityX >= lastX)
+//        chart?.setScroller(scroller, velocityX >= lastX)
 
         return false
     }

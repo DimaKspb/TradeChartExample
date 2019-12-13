@@ -1,11 +1,10 @@
-package com.dima.tradechart.render
+package com.text.traderchart.chart.render
 
-import android.animation.ValueAnimator
 import android.graphics.*
-import com.dima.tradechart.model.BaseRender
 import com.text.traderchart.chart.component.Chart
-import com.dima.tradechart.series.LineSeries
-
+import com.text.traderchart.chart.model.BaseQuote
+import com.text.traderchart.chart.model.BaseRender
+import com.text.traderchart.chart.model.BaseSeries
 
 class LineRender(private val chart: Chart) : BaseRender {
     private val p = Path()
@@ -16,54 +15,32 @@ class LineRender(private val chart: Chart) : BaseRender {
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas, series: LineSeries) {
-        p.rewind()
+    private val matrix = Matrix()
 
-        val mySeries = series.getScreenData()
-        p.moveTo(
-                chart.getSceneXValue(mySeries[0].timeDouble),
-                chart.getSceneYValue(mySeries[0].bid)
-        )
-        var prevPointX: Float? = null
-        var prevPointY: Float? = null
+    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+       drawPath(canvas,series)
+    }
 
-        for (i in 0 until mySeries.size) {
-            val pointX = chart.getSceneXValue(mySeries[i].timeDouble)
-            val pointY = chart.getSceneYValue(mySeries[i].bid)
+    private fun drawPath(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+        p.reset()
 
-            if (i == 0)
-                p.lineTo(pointX, pointY)
-            else if
-                         (prevPointX != null && prevPointY != null) {
-                val midX = (prevPointX + pointX) / 2
-                val midY = (prevPointY + pointY) / 2
+        val points = floatArrayOf()
+        val mySeries = series.getData()
 
-                if (i == 1)
-                    p.lineTo(midX, midY)
-                else if (i == mySeries.size - 1) {
-                    val objectAnimator1 = ValueAnimator.ofFloat(prevPointX, midX)
-//                    val objectAnimator2 = ValueAnimator.ofFloat(prevPointY, midY)
-//                    val animSet = AnimatorSet()
-//                    animSet.playTogether(objectAnimator1, objectAnimator2)
+        val x0 = chart.getSceneXValue(mySeries[0].getCurrentTime())
+        val y0 = chart.getSceneYValue(mySeries[0].getCurrentValue())
 
-//                    animSet.addListener(object : AnimatorListenerAdapter() {
-//                        override fun onAnimationStart(animation: Animator?) {
-//                            Log.d("Animate", "${animation.toString()}")
-//                        }
-//                    })
-//                    animSet.start()
-                } else
-                    p.quadTo(prevPointX, (prevPointY), midX, (midY))
+        p.moveTo(x0, y0)
 
-            }
-            prevPointX = pointX
-            prevPointY = pointY
+        for (i in 1 until mySeries.size) {
+            p.lineTo(
+                chart.getSceneXValue(mySeries[i].getCurrentTime()),
+                chart.getSceneYValue(mySeries[i].getCurrentValue())
+            )
         }
 
-        if (prevPointY != null && prevPointX != null) {
-//            p.lineTo(prevPointX, (chart.offsetBottom + prevPointY))
-        }
+//        matrix.mapPoints(pathsPointsTransformed, offset, points, offset, count)
 
-        canvas?.drawPath(p, paintLine)
+        canvas.drawPath(p, paintLine)
     }
 }
