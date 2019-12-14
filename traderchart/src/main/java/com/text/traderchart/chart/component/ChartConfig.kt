@@ -28,6 +28,11 @@ fun <T : Any> T.logging(message: String) {
         Log.d("#!?${this::class.java.simpleName}", message)
 }
 
+fun <T : Any> T.logging(message: Long) {
+    if (ChartConfig.logging)
+        Log.d("#!?${this::class.java.simpleName}", message.toString())
+}
+
 
 
 

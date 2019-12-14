@@ -6,19 +6,18 @@ import com.text.traderchart.chart.series.LineSeries
 import com.text.traderchart.chart.model.*
 
 class Chart {
-    private val typeChart = TypeChart.LINE
-
-    var isChartInit = false
+    private var typeChart = TypeChart.LINE
     var mySeries: BaseSeries<BaseQuote> = LineSeries()
-
-    var frame = 1
-
-    private val dY = mySeries.maxY - mySeries.minY
 
     var height = 0f
     var width = 0f
     var heightWithPadding = 0f
     var widthWithPadding = 0f
+
+    var isChartInit = false
+    var frame = 1
+
+    private val dY = mySeries.maxY - mySeries.minY
 
     fun initSize(height: Int = 0, width: Int = 0) {
         logging("init size: $height , $width")
@@ -59,6 +58,14 @@ class Chart {
 
     fun getSeries() = mySeries
 
+    fun copyThis(chart: Chart) {
+        typeChart = chart.typeChart
+        isChartInit = chart.isChartInit
+        frame = chart.frame
+        mySeries = chart.getSeries()
+
+        initSize(chart.height.toInt(), chart.width.toInt())
+    }
 
     override fun toString(): String {
         return "Chart(height=$height, width=$width, typeChart=$typeChart ,countSeries=${mySeries.getData().size})"

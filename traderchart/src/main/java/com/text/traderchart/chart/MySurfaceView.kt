@@ -12,8 +12,11 @@ import com.text.traderchart.chart.component.Chart
 import com.text.traderchart.chart.component.ChartConfig
 import com.text.traderchart.chart.draw.DrawThread
 import com.text.traderchart.chart.component.MyScroller
+import com.text.traderchart.chart.component.logging
 import com.text.traderchart.chart.draw.ISurfaceRender
 import com.text.traderchart.chart.draw.SurfaceRenderManager
+import com.text.traderchart.chart.model.BaseQuote
+import com.text.traderchart.chart.model.BaseSeries
 import com.text.traderchart.chart.model.Quote
 import com.text.traderchart.chart.model.data
 import com.text.traderchart.chart.render.GridRender
@@ -45,34 +48,20 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
         drawThread.start()
     }
 
-    //Mock data
-    private val series = LineSeries().apply {
-        addAllPoint(data())
-    }
-
-    override fun onDrawFrame(canvas: Canvas) {
+    override fun onDrawFrame(canvas: Canvas, lastFrameTime: Long) {
         surfaceRenderManager.drawRenders(canvas, chart.getSeries())
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
         Log.d("Surface", "surfaceChanged$width , $height ,$format")
         myHolder = holder
-
-        chart.apply {
-            initSize(height, width)
-            setSeries(series)
-        }
-
-        surfaceRenderManager.apply {
-            addRender(AreaRender(chart))
-            addRender(GridRender(chart))
-            addRender(LineRender(chart))
-        }
+        chart.initSize(height, width)
+        surfaceRenderManager.addRender(AreaRender(chart), GridRender(chart), LineRender(chart))
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
         Log.d("Surface", "surfaceDestroyed")
-        drawThread.stopDraw()
+//        drawThread.stopDraw()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
@@ -90,8 +79,15 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
         return true
     }
 
+    fun setSeries(series: BaseSeries<BaseQuote>) {
+        chart.setSeries(series)
+    }
 
     fun initRandomData() {
         chart.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15080, 1.15100), 0.0, Calendar.getInstance().timeInMillis))
+    }
+
+    fun moveToLeft() {
+
     }
 }

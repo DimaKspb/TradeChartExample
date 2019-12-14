@@ -2,6 +2,8 @@ package com.dima.tradechart
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.text.traderchart.chart.model.data
+import com.text.traderchart.chart.series.LineSeries
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -14,15 +16,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         buttun1.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                while (true) {
-                    delay(1500)
-                    svChart.initRandomData()
-                }
-            }
+            svChart.setSeries(LineSeries().apply {
+                addAllPoint(data())
+            })
         }
 
-        btnLeft.setOnClickListener { }
+        btnLeft.setOnClickListener {
+            svChart.moveToLeft()
+        }
         btnRight.setOnClickListener {}
     }
 }

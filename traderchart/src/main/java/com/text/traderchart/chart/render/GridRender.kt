@@ -38,7 +38,7 @@ class GridRender(private val chart: Chart) : BaseRender {
         textSize = 22f
     }
 
-    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+    override fun onDraw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
         computeGrid(verticalValues, chart.mySeries.minY, chart.mySeries.maxY, VERTICAL_LINES_COUNT)
 
         for (value in verticalValues) {
@@ -59,6 +59,10 @@ class GridRender(private val chart: Chart) : BaseRender {
             drawXLabel(canvas, chart, value)
 
         drawerBorder(canvas, chart)
+    }
+
+    override fun onUpdate(chart: Chart) {
+
     }
 
     private fun drawerBorder(canvas: Canvas, chart: Chart) {

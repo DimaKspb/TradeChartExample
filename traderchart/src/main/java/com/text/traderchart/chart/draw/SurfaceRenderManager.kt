@@ -12,6 +12,7 @@ class SurfaceRenderManager {
     }
 
     fun addRender(vararg render: BaseRender) {
+        myRenders.clear()
         myRenders.addAll(render)
     }
 
@@ -21,7 +22,7 @@ class SurfaceRenderManager {
 
     fun drawRenders(canvas: Canvas, series: BaseSeries<BaseQuote>) {
         for (i in myRenders) {
-            i.draw(canvas, series)
+            i.onDraw(canvas, series)
         }
     }
 }

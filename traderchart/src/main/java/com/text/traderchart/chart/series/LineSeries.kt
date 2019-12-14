@@ -14,7 +14,7 @@ class LineSeries : BaseSeries<Quote>() {
         allSeries.clear()
         allSeries.addAll(array.map { Quote(it.open, 0.0, it.time) } as ArrayList<Quote>)
 
-        screenStartPosition = allSeries.size / 2
+        screenStartPosition = allSeries.size - 10
         screenFinishPosition = allSeries.size
 
         onUpdateSeries()

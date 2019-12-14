@@ -11,14 +11,17 @@ import com.text.traderchart.chart.model.BaseSeries
 
 class AreaRender(private val chart: Chart) : BaseRender {
 
-
     private val myPaintLine = Paint().apply {
         color = Color.RED
         style = Paint.Style.STROKE
         strokeWidth = 2f
     }
 
-    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+    override fun onUpdate(chart: Chart) {
+
+    }
+
+    override fun onDraw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
         //Background
         canvas.drawColor(Color.WHITE)
         //horizontal
@@ -26,4 +29,6 @@ class AreaRender(private val chart: Chart) : BaseRender {
         //vertical
         canvas.drawLine(chart.width - ChartConfig.offsetRight, chart.heightWithPadding, chart.width - ChartConfig.offsetRight, 0f, myPaintLine)
     }
+
+
 }

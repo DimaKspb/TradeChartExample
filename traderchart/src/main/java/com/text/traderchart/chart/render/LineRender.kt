@@ -1,6 +1,7 @@
 package com.text.traderchart.chart.render
 
 import android.graphics.*
+import android.graphics.Paint.ANTI_ALIAS_FLAG
 import com.text.traderchart.chart.component.Chart
 import com.text.traderchart.chart.component.logging
 import com.text.traderchart.chart.draw.BaseRender
@@ -8,15 +9,15 @@ import com.text.traderchart.chart.model.BaseQuote
 import com.text.traderchart.chart.model.BaseSeries
 
 
-class LineRender(private val chart: Chart) : BaseRender {
+class LineRender(private var chart: Chart) : BaseRender {
 
     private val p = Path()
 
-    private val paintLine = Paint().apply {
+    private val paintLine = Paint(ANTI_ALIAS_FLAG).apply {
         color = Color.BLUE
-        style = Paint.Style.STROKE
-        isAntiAlias = true
         strokeWidth = 2f
+        style = Paint.Style.STROKE
+        pathEffect = CornerPathEffect(14f)
     }
 
     init {
@@ -25,45 +26,39 @@ class LineRender(private val chart: Chart) : BaseRender {
 
     private val matrix = Matrix()
 
-    override fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
-        drawAsPath(canvas, series.getData())
+    override fun onDraw(canvas: Canvas, series: BaseSeries<BaseQuote>) {
+        drawAsPath(canvas, series.getScreenData())
+    }
+
+    override fun onUpdate(chart: Chart) {
+//        this.chart = chart
     }
 
     private fun drawAsLine(canvas: Canvas, series: ArrayList<out BaseQuote>) {
-        val source = arrayListOf<Float>()
+        val ts = System.currentTimeMillis()
 
-        for (i in 0 until series.size step 2) {
-            if (i != 0) {
-                source.add(chart.getSceneXValue(series[i - 1].getCurrentTime()))
-                source.add(chart.getSceneYValue(series[i - 1].getCurrentValue()))
+        val source = FloatArray(series.size * 4)
+        var _i = 0
+        for (i in 0 until series.size) {
+            if (i >= 2) {
+                source[_i++] = (chart.getSceneXValue(series[i - 1].getTime()))
+                source[_i++] = (chart.getSceneYValue(series[i - 1].getValue()))
             }
-            source.add(chart.getSceneXValue(series[i].getCurrentTime()))
-            source.add(chart.getSceneYValue(series[i].getCurrentValue()))
-
-            source.add(chart.getSceneXValue(series[i + 1].getCurrentTime()))
-            source.add(chart.getSceneYValue(series[i + 1].getCurrentValue()))
+            source[_i++] = (chart.getSceneXValue(series[i].getTime()))
+            source[_i++] = (chart.getSceneYValue(series[i].getValue()))
         }
 
-        val floatArray = FloatArray(source.size / 2)
-
-        for (i in 0 until source.size / 2) {
-            floatArray[i] = source[i]
-        }
-        canvas.drawLines(floatArray, paintLine)
+        canvas.drawLines(source, paintLine)
+        logging(System.currentTimeMillis() - ts)
     }
 
     private fun drawAsPath(canvas: Canvas, series: ArrayList<out BaseQuote>) {
         p.rewind()
 
-        val x0 = chart.getSceneXValue(series[0].getCurrentTime())
-        val y0 = chart.getSceneYValue(series[0].getCurrentValue())
-
-        p.moveTo(x0, y0)
-
-        for (i in 1 until series.size / 4) {
+        for (i in 0 until series.size) {
             p.lineTo(
-                    chart.getSceneXValue(series[i].getCurrentTime()),
-                    chart.getSceneYValue(series[i].getCurrentValue())
+                    chart.getSceneXValue(series[i].getTime()),
+                    chart.getSceneYValue(series[i].getValue())
             )
         }
         canvas.drawPath(p, paintLine)

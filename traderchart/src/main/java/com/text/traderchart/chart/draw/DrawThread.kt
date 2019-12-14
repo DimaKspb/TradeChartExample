@@ -26,12 +26,13 @@ class DrawThread(private val drawListener: ISurfaceRender) : Thread() {
             logging("start Draw")
 
             while (isDrawing) {
+                logging("draw $isDrawing")
                 val ts = System.currentTimeMillis()
-                measureFps(ts)
+//                measureFps(ts)
                 if (surfaceHolder?.surface?.isValid == true) {
                     val canvas = getCanvas()
                     canvas?.apply {
-                        drawListener.onDrawFrame(canvas)
+                        drawListener.onDrawFrame(canvas, ts)
                         surfaceHolder?.unlockCanvasAndPost(this)
                     }
                 }
