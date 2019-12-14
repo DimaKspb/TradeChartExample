@@ -83,12 +83,6 @@ abstract class BaseSeries<out T : BaseQuote> {
     }
 }
 
-interface BaseRender {
-    fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>)
-//    fun draw(canvas: Canvas, series: LineSeries) {}
-//    fun draw(canvas: Canvas, series: BaseSeries<BaseQuote>) {}
-//    fun draw(canvas: Canvas, series: CandleSeries) {}
-}
 
 enum class TypeChart {
     CANDLE, LINE

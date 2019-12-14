@@ -1,41 +1,42 @@
 package com.text.traderchart.chart.component
 
-import android.graphics.Canvas
 import com.text.traderchart.chart.component.ChartConfig.offsetBottom
 import com.text.traderchart.chart.component.ChartConfig.offsetRight
-import com.text.traderchart.chart.render.GridRender
-import com.text.traderchart.chart.render.LineRender
-import com.text.traderchart.chart.render.XYAxisRender
 import com.text.traderchart.chart.series.LineSeries
 import com.text.traderchart.chart.model.*
 
-class Chart(val height: Int = 0, var width: Int = 0) {
+class Chart {
     private val typeChart = TypeChart.LINE
 
     var isChartInit = false
     var mySeries: BaseSeries<BaseQuote> = LineSeries()
-    private var isEndChartVisible = true
 
     var frame = 1
 
     private val dY = mySeries.maxY - mySeries.minY
 
-    var isLeft = false
+    var height = 0f
+    var width = 0f
+    var heightWithPadding = 0f
+    var widthWithPadding = 0f
 
-    val chartHeight = height - 50f
-    val chartWidth = width - offsetRight
+    fun initSize(height: Int = 0, width: Int = 0) {
+        logging("init size: $height , $width")
 
-    val myRenders = arrayListOf(XYAxisRender(this), LineRender(this), GridRender(this))
+        this.height = height.toFloat()
+        this.width = width.toFloat()
+
+        heightWithPadding = height - 50f
+        widthWithPadding = width - offsetRight
+    }
 
     private fun getMinY() = mySeries.minY - dY
     private fun getMaxY() = mySeries.maxY + dY
 
 
-    fun getSceneXValue(x: Double): Float =
-        ((x - mySeries.minX) * chartWidth / (mySeries.maxX - mySeries.minX).toFloat()).toFloat()
+    fun getSceneXValue(x: Double): Float = ((x - mySeries.minX) * widthWithPadding / (mySeries.maxX - mySeries.minX).toFloat()).toFloat()
 
-    fun getSceneYValue(bid: Double): Float =
-        ((chartHeight - (bid - getMinY()) * chartHeight / (getMaxY() - getMinY()) - offsetBottom).toFloat())
+    fun getSceneYValue(bid: Double): Float = ((heightWithPadding - (bid - getMinY()) * heightWithPadding / (getMaxY() - getMinY()) - offsetBottom).toFloat())
 
     fun updateLastQuote(lineSeries: Quote) {
         mySeries.addOnePoint(lineSeries, frame.toDouble())
@@ -50,12 +51,6 @@ class Chart(val height: Int = 0, var width: Int = 0) {
 //        mySeries.scale(isZoomOut)
     }
 
-    fun drawRenders(canvas: Canvas, ts: Long) {
-        for (i in myRenders) {
-            i.draw(canvas, mySeries)
-        }
-    }
-
     fun setSeries(mySeries: BaseSeries<BaseQuote>) {
         isChartInit = false
         this.mySeries = mySeries
@@ -66,6 +61,6 @@ class Chart(val height: Int = 0, var width: Int = 0) {
 
 
     override fun toString(): String {
-        return "Chart(height=$height, width=$width, typeChart=$typeChart)"
+        return "Chart(height=$height, width=$width, typeChart=$typeChart ,countSeries=${mySeries.getData().size})"
     }
 }

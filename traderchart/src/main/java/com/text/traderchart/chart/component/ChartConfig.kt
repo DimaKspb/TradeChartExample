@@ -1,9 +1,12 @@
 package com.text.traderchart.chart.component
 
 import android.util.DisplayMetrics
+import android.util.Log
+import kotlin.reflect.KClass
 
 
 object ChartConfig {
+    var logging = false
     private var displayMetrics: DisplayMetrics? = null
 
     fun setDisplayMetrics(displayMetrics: DisplayMetrics?) {
@@ -19,3 +22,14 @@ object ChartConfig {
         return dp * (displayMetrics?.density ?: 1f)
     }
 }
+
+fun <T : Any> T.logging(message: String) {
+    if (ChartConfig.logging)
+        Log.d("#!?${this::class.java.simpleName}", message)
+}
+
+
+
+
+
+

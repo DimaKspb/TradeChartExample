@@ -1,4 +1,4 @@
-package com.dima.tradechart.component
+package com.text.traderchart.chart.component
 
 import android.annotation.SuppressLint
 import android.content.Context

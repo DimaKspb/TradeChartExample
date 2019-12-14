@@ -3,8 +3,8 @@ package com.text.traderchart.chart.render
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import com.text.traderchart.chart.model.BaseRender
 import com.text.traderchart.chart.component.Chart
+import com.text.traderchart.chart.draw.BaseRender
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.*
@@ -14,7 +14,7 @@ import java.text.NumberFormat
 import java.text.ParseException
 
 
-class GridRender(private val chart: Chart) : BaseRender{
+class GridRender(private val chart: Chart) : BaseRender {
 //    private val stepWidth = chart.chartWidth / BOARD_LINES
 //    private val stepHeight = chart.chartHeight / BOARD_LINES
 
