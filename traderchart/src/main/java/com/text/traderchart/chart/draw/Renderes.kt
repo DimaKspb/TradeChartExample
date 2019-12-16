@@ -6,7 +6,7 @@ import com.text.traderchart.chart.model.BaseQuote
 import com.text.traderchart.chart.model.BaseSeries
 
 interface ISurfaceRender {
-    fun onDrawFrame(canvas: Canvas, lastFrameTime: Long)
+    fun onDrawFrame(canvas: Canvas)
 }
 
 interface BaseRender {

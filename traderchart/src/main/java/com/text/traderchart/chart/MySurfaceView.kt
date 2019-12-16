@@ -18,11 +18,9 @@ import com.text.traderchart.chart.draw.SurfaceRenderManager
 import com.text.traderchart.chart.model.BaseQuote
 import com.text.traderchart.chart.model.BaseSeries
 import com.text.traderchart.chart.model.Quote
-import com.text.traderchart.chart.model.data
 import com.text.traderchart.chart.render.GridRender
 import com.text.traderchart.chart.render.LineRender
 import com.text.traderchart.chart.render.AreaRender
-import com.text.traderchart.chart.series.LineSeries
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
@@ -48,8 +46,9 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
         drawThread.start()
     }
 
-    override fun onDrawFrame(canvas: Canvas, lastFrameTime: Long) {
+    override fun onDrawFrame(canvas: Canvas) {
         surfaceRenderManager.drawRenders(canvas, chart.getSeries())
+        chart.updateAnimator()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -80,7 +79,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
     }
 
     fun setSeries(series: BaseSeries<BaseQuote>) {
-        chart.setSeries(series)
+        chart.setSeriesWithAnimate(series)
     }
 
     fun initRandomData() {

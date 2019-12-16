@@ -1,13 +1,16 @@
 package com.text.traderchart.chart.component
 
+import android.util.Log
 import com.text.traderchart.chart.component.ChartConfig.offsetBottom
 import com.text.traderchart.chart.component.ChartConfig.offsetRight
 import com.text.traderchart.chart.series.LineSeries
 import com.text.traderchart.chart.model.*
+import com.text.traderchart.chart.utils.Animator
 
 class Chart {
     private var typeChart = TypeChart.LINE
     var mySeries: BaseSeries<BaseQuote> = LineSeries()
+    var animator = Animator(1000)
 
     var height = 0f
     var width = 0f
@@ -16,8 +19,6 @@ class Chart {
 
     var isChartInit = false
     var frame = 1
-
-    private val dY = mySeries.maxY - mySeries.minY
 
     fun initSize(height: Int = 0, width: Int = 0) {
         logging("init size: $height , $width")
@@ -29,13 +30,18 @@ class Chart {
         widthWithPadding = width - offsetRight
     }
 
-    private fun getMinY() = mySeries.minY - dY
-    private fun getMaxY() = mySeries.maxY + dY
+    var minY = 0f
+    var maxY = 0f
+    var minX = 0f
+    var maxX = 0f
 
+    fun getSceneXValue(time: Double): Float {
+        return (((time - minX) * widthWithPadding / (maxX - minX)).toFloat())
+    }
 
-    fun getSceneXValue(x: Double): Float = ((x - mySeries.minX) * widthWithPadding / (mySeries.maxX - mySeries.minX).toFloat()).toFloat()
-
-    fun getSceneYValue(bid: Double): Float = ((heightWithPadding - (bid - getMinY()) * heightWithPadding / (getMaxY() - getMinY()) - offsetBottom).toFloat())
+    fun getSceneYValue(bid: Double): Float {
+        return (((heightWithPadding - (bid - minY) * heightWithPadding / (maxY - minY) - offsetBottom).toFloat()))
+    }
 
     fun updateLastQuote(lineSeries: Quote) {
         mySeries.addOnePoint(lineSeries, frame.toDouble())
@@ -53,7 +59,26 @@ class Chart {
     fun setSeries(mySeries: BaseSeries<BaseQuote>) {
         isChartInit = false
         this.mySeries = mySeries
+        fractal = 1f
         isChartInit = true
+    }
+
+    fun setSeriesWithAnimate(mySeries: BaseSeries<BaseQuote>) {
+        this.mySeries = mySeries
+        updateExtremes()
+    }
+
+    var fractal = 0f
+    private fun updateExtremes() {
+        minX = (mySeries.minX).toFloat()
+        maxX = (mySeries.maxX).toFloat()
+        minY = (mySeries.minY).toFloat()
+        maxY = (mySeries.maxY).toFloat()
+
+        animator.getProgress {
+            fractal = it
+            Log.d("dssadads", "$it")
+        }
     }
 
     fun getSeries() = mySeries
@@ -69,5 +94,9 @@ class Chart {
 
     override fun toString(): String {
         return "Chart(height=$height, width=$width, typeChart=$typeChart ,countSeries=${mySeries.getData().size})"
+    }
+
+    fun updateAnimator() {
+        animator.onUpdate()
     }
 }

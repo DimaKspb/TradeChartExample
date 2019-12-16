@@ -4,6 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Build
+import android.util.Log
 import android.view.SurfaceHolder
 import com.text.traderchart.chart.component.logging
 import java.lang.Exception
@@ -26,17 +27,13 @@ class DrawThread(private val drawListener: ISurfaceRender) : Thread() {
             logging("start Draw")
 
             while (isDrawing) {
-                logging("draw $isDrawing")
-                val ts = System.currentTimeMillis()
-//                measureFps(ts)
                 if (surfaceHolder?.surface?.isValid == true) {
                     val canvas = getCanvas()
                     canvas?.apply {
-                        drawListener.onDrawFrame(canvas, ts)
+                        drawListener.onDrawFrame(canvas)
                         surfaceHolder?.unlockCanvasAndPost(this)
                     }
                 }
-                lastTs = ts
             }
         } catch (exp: Exception) {
             isDrawing = false
@@ -65,8 +62,11 @@ class DrawThread(private val drawListener: ISurfaceRender) : Thread() {
         frameCounter++
         val now = System.currentTimeMillis()
         val delta = now - lastFpsCalcUptime
+        Log.d("Deltas", "$fps , $delta , $frameCounter")
+
         if (delta > 1000) {
             fps = frameCounter * 1000 / delta.toInt()
+
 
             frameCounter = 0
             lastFpsCalcUptime = now
