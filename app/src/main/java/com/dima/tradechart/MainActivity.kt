@@ -6,7 +6,6 @@ import com.dima.tradechart.databinding.ActivityMainBinding
 import com.text.traderchart.chart.model.data
 import com.text.traderchart.chart.series.LineSeries
 import kotlin.properties.Delegates.notNull
-
 class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding by notNull()
