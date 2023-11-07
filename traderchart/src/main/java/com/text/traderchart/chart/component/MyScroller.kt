@@ -10,6 +10,7 @@ import android.widget.Scroller
 import com.text.traderchart.chart.component.Chart
 
 
+
 class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.SimpleOnGestureListener(),
     ScaleGestureDetector.OnScaleGestureListener, View.OnTouchListener {
     private var scaleFactor = 20
@@ -29,21 +30,31 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+    override fun onTouch(v: View, event: MotionEvent): Boolean {
         gestureScale?.onTouchEvent(event)
         gestureDetector?.onTouchEvent(event)
 
         return true
     }
 
-    override fun onFling(e1: MotionEvent?, e2: MotionEvent?, velocityX: Float, velocityY: Float): Boolean {
+    override fun onFling(
+        e1: MotionEvent?,
+        e2: MotionEvent,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean {
         scroller?.fling(0, 0, -velocityX.toInt(), 0, -1000, 1000, 0, 0)
 //        chart?.setScroller(scroller, velocityX >= lastX)
 
         return false
     }
 
-    override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+    override fun onScroll(
+        e1: MotionEvent?,
+        e2: MotionEvent,
+        distanceX: Float,
+        distanceY: Float
+    ): Boolean {
         e2 ?: return true
         if (isScale) return true
         if (scroller?.isFinished == false) return true
@@ -53,19 +64,19 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
         return true
     }
 
-    override fun onScaleBegin(detector: ScaleGestureDetector?): Boolean {
+    override fun onScaleBegin(detector: ScaleGestureDetector): Boolean {
         isScale = true
         scaleDelta = detector?.currentSpanX!!
         return true
     }
 
-    override fun onScaleEnd(detector: ScaleGestureDetector?) {
+    override fun onScaleEnd(detector: ScaleGestureDetector) {
         isScale = false
         scaleFactor = 20
         scaleFactor2 = -20
     }
 
-    override fun onScale(detector: ScaleGestureDetector?): Boolean {
+    override fun onScale(detector: ScaleGestureDetector): Boolean {
         if (scaleDelta - detector?.currentSpanX!! > scaleFactor) {
             chart?.scale(true)
             scaleFactor += scaleFactor
@@ -77,11 +88,11 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
         return true
     }
 
-    override fun onShowPress(e: MotionEvent?) {
+    override fun onShowPress(e: MotionEvent) {
 
     }
 
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    override fun onSingleTapUp(e: MotionEvent): Boolean {
         if (scroller?.isFinished == false)
             scroller?.forceFinished(true)
 
@@ -89,13 +100,13 @@ class MyScroller(context: Context, private val chart: Chart?) : GestureDetector.
         return true
     }
 
-    override fun onDown(e: MotionEvent?): Boolean {
+    override fun onDown(e: MotionEvent): Boolean {
         scroller?.forceFinished(true)
 
         return true
     }
 
-    override fun onLongPress(e: MotionEvent?) {
+    override fun onLongPress(e: MotionEvent) {
     }
 }
 

@@ -18,13 +18,10 @@ class GridRender(private val chart: Chart) : BaseRender {
 //    private val stepWidth = chart.chartWidth / BOARD_LINES
 //    private val stepHeight = chart.chartHeight / BOARD_LINES
 
-    private val horizontalValues = java.util.ArrayList<Double>()
-    private val verticalValues = java.util.ArrayList<Double>()
-
+    private val horizontalValues = ArrayList<Double>()
+    private val verticalValues = ArrayList<Double>()
     private var yLabelsVerticalOffset = 0f
-
     private val formatDate = SimpleDateFormat("hh:mm", Locale.ENGLISH)
-
     private val gridLinesPaint = Paint().apply {
         color = Color.GRAY
         alpha = 150
@@ -105,7 +102,7 @@ class GridRender(private val chart: Chart) : BaseRender {
         canvas.drawLine(
             0f,
             chart.getSceneYValue(values),
-            chart.width.toFloat(),
+            chart.width,
             chart.getSceneYValue(values),
             gridLinesPaint
         )
@@ -120,7 +117,7 @@ class GridRender(private val chart: Chart) : BaseRender {
         )
     }
 
-    private fun computeGrid(values: java.util.ArrayList<Double>, s: Double, e: Double, num: Int) {
+    private fun computeGrid(values: ArrayList<Double>, s: Double, e: Double, num: Int) {
         FORMAT.maximumFractionDigits = 5
         val xStep = roundUp(abs(s - e) / num.toDouble())
         val xStart = xStep * ceil(s / xStep)

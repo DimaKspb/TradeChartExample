@@ -29,7 +29,11 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     private var myHolder: SurfaceHolder
 
@@ -48,6 +52,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
 
     override fun onDrawFrame(canvas: Canvas) {
         surfaceRenderManager.drawRenders(canvas, chart.getSeries())
+
         chart.updateAnimator()
     }
 
@@ -58,12 +63,12 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
         surfaceRenderManager.addRender(AreaRender(chart), GridRender(chart), LineRender(chart))
     }
 
-    override fun surfaceDestroyed(holder: SurfaceHolder?) {
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
         Log.d("Surface", "surfaceDestroyed")
 //        drawThread.stopDraw()
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder?) {
+    override fun surfaceCreated(holder: SurfaceHolder) {
         Log.d("Surface", "surfaceCreated")
         ChartConfig.setDisplayMetrics(resources.displayMetrics)
         ChartConfig.logging = true
@@ -83,7 +88,15 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback, ISurfaceRender {
     }
 
     fun initRandomData() {
-        chart.updateLastQuote(Quote(ThreadLocalRandom.current().nextDouble(1.15080, 1.15100), 0.0, Calendar.getInstance().timeInMillis))
+        chart.updateLastQuote(
+            Quote(
+                ThreadLocalRandom
+                    .current()
+                    .nextDouble(1.15080, 1.15100),
+                0.0,
+                Calendar.getInstance().timeInMillis
+            )
+        )
     }
 
     fun moveToLeft() {
